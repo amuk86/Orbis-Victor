@@ -1,0 +1,233 @@
+.ov-game {
+  --ov-ink: #9bb05a;
+  --ov-muted: #6f7f45;
+  --ov-edge: #4b5320;
+  --ov-paper: #e8e1c8;
+  position: relative;
+  isolation: isolate;
+  min-height: 100dvh;
+  padding: 22px;
+  color: var(--ov-ink);
+  font-size: 14px;
+}
+.ov-game *, .ov-game *::before, .ov-game *::after { box-sizing: border-box; }
+.ov-game button, .ov-game input { font: inherit; }
+.ov-game button, .ov-game a { -webkit-tap-highlight-color: transparent; }
+.ov-game button:not(:disabled), .ov-game summary { cursor: pointer; }
+.ov-game :is(button, a, input, summary):focus-visible { outline: 2px solid var(--ov-paper); outline-offset: 4px; }
+.ov-game button:disabled { cursor: not-allowed; }
+.ov-background { position: fixed; inset: 0; z-index: -1; pointer-events: none; background: #120f17; }
+.ov-background > div:last-child { position: absolute; inset: 0; background: #120f174d; }
+.ov-frame { border: 2px solid var(--ov-edge); border-radius: 12px; padding: 10px; background: #120f17c9; box-shadow: 0 0 32px #0006, inset 0 0 24px #0003; }
+.ov-panel { background: #1b1722ed; border: 1px solid var(--ov-edge); }
+.ov-console { max-width: 1600px; min-height: 680px; height: calc(100dvh - 44px); margin: 0 auto; display: flex; flex-direction: column; gap: 14px; }
+.ov-topbar { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 8px 4px 2px; }
+.ov-wordmark { text-decoration: none; text-transform: uppercase; letter-spacing: .24em; font-weight: 600; font-size: clamp(17px,1.6vw,25px); white-space: nowrap; }
+.ov-turn-status { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 10px; text-align: center; font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: clamp(13px,1.3vw,19px); }
+.ov-turn-status:focus { outline: none; }
+.ov-columns { flex: 1; min-height: 0; display: grid; grid-template-columns: clamp(150px,18vw,245px) minmax(0,1fr) clamp(140px,17vw,230px); gap: 14px; }
+.ov-commanders, .ov-dispatches { min-height: 0; display: flex; flex-direction: column; padding: 12px; overflow: hidden; }
+.ov-game summary { display: block; list-style: none; text-transform: uppercase; letter-spacing: .13em; font-size: 16px; margin-bottom: 12px; flex-shrink: 0; }
+.ov-game summary::-webkit-details-marker { display: none; }
+.ov-drawer-hint { display: none; }
+.ov-commander-list { overflow: auto; scrollbar-width: thin; scrollbar-color: var(--ov-edge) transparent; }
+.ov-commander { color: var(--owner); padding: 7px 5px; border: 1px solid transparent; font-family: Arial, sans-serif; }
+.ov-commander.is-current { border-color: var(--owner); background: #0002; }
+.ov-commander.is-eliminated { opacity: .45; text-decoration: line-through; }
+.ov-commander-heading { display: flex; align-items: start; justify-content: space-between; gap: 8px; font-size: 16px; }
+.ov-commander-heading > span:first-child { overflow-wrap: anywhere; }
+.ov-numeric { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-variant-numeric: tabular-nums; }
+.ov-commander-heading .ov-numeric { flex-shrink: 0; }
+.ov-holding { display: flex; justify-content: space-between; gap: 7px; width: 100%; color: var(--ov-ink); background: none; border: 0; text-align: left; padding: 5px 0; font-size: 13px !important; }
+.ov-holding:not(:disabled):hover { color: var(--ov-paper); }
+.ov-panel-foot { margin-top: auto; padding-top: 16px; color: var(--ov-muted); font-family: Arial, sans-serif; font-size: 11px; line-height: 1.6; }
+.ov-board-zone { min-height: 0; display: grid; grid-template-rows: auto minmax(250px,1fr) minmax(155px,.44fr); gap: 12px; }
+.ov-board-toolbar { display: flex; align-items: center; gap: 16px; justify-content: space-between; }
+.ov-filters { display: flex; gap: 8px; }
+.ov-button { min-height: 40px; padding: 9px 15px; border: 1px solid var(--ov-edge); background: #120f17b3; color: var(--ov-ink); text-decoration: none; text-transform: uppercase; font-size: 13px !important; letter-spacing: .09em; text-align: center; display: inline-flex; align-items: center; justify-content: center; gap: 6px; transition: background-color .15s, color .15s, border-color .15s; }
+.ov-button:not(:disabled):hover { border-color: var(--ov-ink); background: #4b53204d; color: var(--ov-paper); }
+.ov-button:disabled { opacity: .32; }
+.ov-primary, .ov-button.is-active { background: var(--ov-edge); color: var(--ov-paper); }
+.ov-primary:not(:disabled):hover { background: #606b2b; }
+.ov-progress { display: flex; align-items: center; gap: 10px; min-width: 90px; flex: 1; justify-content: flex-end; }
+.ov-progress .ov-numeric { white-space: nowrap; font-size: 14px; }
+.ov-progress progress { flex: 1; min-width: 20px; max-width: 260px; height: 10px; appearance: none; background: #120f17; border: 1px solid var(--ov-edge); }
+.ov-progress progress::-webkit-progress-bar { background: #120f17; }
+.ov-progress progress::-webkit-progress-value { background: #e0b030; }
+.ov-progress progress::-moz-progress-bar { background: #e0b030; }
+.ov-board { display: grid; grid-template-columns: repeat(5,minmax(0,1fr)); grid-template-rows: repeat(2,minmax(0,1fr)); gap: 10px; }
+.ov-territory { position: relative; min-width: 0; min-height: 130px; border: 3px solid var(--owner); color: var(--ov-ink); background: #1b1722eb; padding: 17px 6px 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; transition: opacity .15s, background-color .15s; }
+.ov-territory:not(:disabled):hover { background: #25212be8; }
+.ov-territory:disabled { cursor: default; }
+.ov-territory.is-attacker { outline: 2px solid var(--ov-paper); outline-offset: 3px; }
+.ov-territory.is-valid-target { outline: 1px dashed #ff3b2b; outline-offset: 2px; }
+.ov-territory.is-target { outline: 3px dashed #ff3b2b; outline-offset: 3px; }
+.ov-territory.is-dimmed { opacity: .35; }
+.ov-territory.is-dimmed:focus-visible, .ov-territory.is-dimmed:hover { opacity: 1; }
+.ov-owner-badge { position: absolute; left: -1px; top: -1px; min-width: 25px; min-height: 25px; padding: 2px 6px; background: var(--owner); color: #120f17; font: 600 16px/1.25 ui-monospace, monospace; }
+.ov-flag { flex-shrink: 0; position: relative; display: block; width: 64px; height: 35px; background: #120f17; border: 1px solid #000; box-shadow: 0 1px 4px #0006; overflow: hidden; }
+.ov-flag img { width: 100%; height: 100%; object-fit: fill; }
+.ov-flag-fallback { display: flex; height: 100%; }
+.ov-flag-fallback i { flex: 1; background: #4b5320; }
+.ov-flag-fallback i:nth-child(2) { background: #e8e1c8; }
+.ov-flag-fallback i:nth-child(3) { background: #6f7f45; }
+.ov-troops { color: var(--ov-paper); font-size: clamp(24px,2.5vw,38px); line-height: 1.15; font-weight: 400; max-width: 100%; overflow-wrap: anywhere; }
+.ov-country-name { font-family: Arial, sans-serif; font-size: clamp(12px,1.15vw,17px); line-height: 1.25; overflow-wrap: anywhere; }
+.ov-card-tag { min-height: 16px; font-family: Arial,sans-serif; font-size: 12px; line-height: 1.15; color: var(--ov-paper); }
+.ov-target-tag { color: #ed695e; }
+.ov-gold { color: #e0b030; animation: ov-tag-in .35s ease-out; }
+.ov-battle { padding: 12px; overflow: auto; scrollbar-width: thin; scrollbar-color: var(--ov-edge) transparent; }
+.ov-battle-heading { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 6px 15px; }
+.ov-game h2 { font-size: 16px; letter-spacing: .11em; font-weight: 400; }
+.ov-battle-heading h2 { text-transform: uppercase; }
+.ov-latin { color: #e0b030; font-size: 14px; white-space: nowrap; }
+.ov-dice-rows { display: flex; flex-wrap: wrap; align-items: start; gap: 12px 24px; margin: 10px 0 7px; }
+.ov-dice-row { display: flex; align-items: center; gap: 10px; max-width: 100%; font-family: Arial,sans-serif; }
+.ov-dice-label { font-size: 13px; max-width: 100px; overflow-wrap: anywhere; }
+.ov-dice { display: flex; flex-wrap: wrap; gap: 4px; }
+.ov-die { display: inline-flex; justify-content: center; align-items: center; width: 29px; height: 29px; font: 17px/1 ui-monospace,monospace; color: #120f17; animation: ov-die-in .18s ease-out; }
+.ov-die.is-win { background: #7fb04a; }
+.ov-die.is-loss { background: #b33a2b; color: #e8e1c8; }
+.ov-die.is-tie { background: #6f7f45; color: #e8e1c8; }
+.ov-commentary { color: #c3cd94; font-style: italic; font-family: Arial,sans-serif; font-size: 15px; line-height: 1.45; }
+.ov-losses { color: var(--ov-muted); font-size: 11px; margin-top: 5px; }
+.ov-dice-placeholder { display: flex; align-items: center; gap: 20px; color: var(--ov-muted); font-size: 34px; margin: 6px 0; }
+.ov-dice-placeholder span { font-size: 13px; font-style: italic; }
+.ov-dispatch-list { flex: 1; min-height: 0; overflow: auto; scrollbar-width: thin; scrollbar-color: var(--ov-edge) transparent; overflow-wrap: anywhere; font-family: Arial,sans-serif; }
+.ov-dispatch { padding-bottom: 12px; margin-bottom: 10px; border-bottom: 1px solid #4b53203d; }
+.ov-dispatch p { font-size: 14px; line-height: 1.45; }
+.ov-dispatch-time { color: var(--ov-muted); font: 10px ui-monospace,monospace; display: block; margin-bottom: 3px; }
+.ov-dispatch .ov-dispatch-reason { margin-top: 2px; font-size: 12px; font-style: italic; color: var(--ov-muted); }
+.ov-event-conquest, .ov-event-victory { color: #e0b030; }
+.ov-event-elimination { color: #d48374; }
+.ov-event-dice { color: #c3cd94; }
+.ov-event-commentary p { font-style: italic; color: var(--ov-muted); }
+.ov-bottom { display: flex; gap: 16px; align-items: center; justify-content: space-between; }
+.ov-actions { display: flex; flex-shrink: 0; flex-wrap: wrap; gap: 10px; }
+.ov-hint { text-align: right; font-family: Arial,sans-serif; font-style: italic; font-size: 13px; line-height: 1.4; max-width: 450px; }
+.ov-speed { font-family: ui-monospace,monospace; }
+.ov-muted { color: var(--ov-muted); font-family: Arial,sans-serif; font-size: 12px; line-height: 1.5; }
+.ov-setup { width: min(100%,1100px); margin: 25px auto; padding: 30px; }
+.ov-back { display: inline-block; text-decoration: none; color: var(--ov-muted); font: 13px Arial,sans-serif; margin-bottom: 36px; }
+.ov-back:hover { color: var(--ov-paper); }
+.ov-eyebrow { text-transform: uppercase; letter-spacing: .25em; font-size: 11px; color: var(--ov-muted); margin-bottom: 10px; }
+.ov-setup h1 { font-size: clamp(27px,4vw,44px); letter-spacing: .06em; font-weight: 500; line-height: 1.25; color: var(--ov-paper); }
+.ov-intro { font-family: Arial,sans-serif; font-size: 15px; margin-top: 12px; line-height: 1.5; }
+.ov-setup-columns { display: grid; grid-template-columns: 1.2fr 1fr; gap: 20px; margin-top: 30px; }
+.ov-setup-choice { padding: 18px; }
+.ov-setup-choice label { display: block; margin-bottom: 9px; font-size: 12px; letter-spacing: .1em; }
+.ov-setup-choice input { background: #120f17; border: 1px solid var(--ov-edge); width: 100%; padding: 12px; color: var(--ov-paper); font: 14px Arial,sans-serif; }
+.ov-country-list { height: 300px; overflow: auto; margin-top: 10px; scrollbar-width: thin; scrollbar-color: var(--ov-edge) transparent; }
+.ov-country-option { display: flex; width: 100%; align-items: center; justify-content: space-between; gap: 12px; border: 1px solid transparent; background: none; text-align: left; padding: 11px 9px; color: var(--ov-ink); font: 14px Arial,sans-serif !important; }
+.ov-country-option .ov-numeric { flex-shrink: 0; color: var(--ov-muted); }
+.ov-country-option.is-chosen { border-color: #e0b030; background: #e0b0300b; color: #e0b030; }
+.ov-country-option:hover { background: #4b532030; }
+.ov-country-option small { font: 11px Arial,sans-serif; }
+.ov-setup-summary { padding: 25px; display: flex; flex-direction: column; align-items: flex-start; gap: 13px; }
+.ov-setup-summary .ov-eyebrow { margin: 0; }
+.ov-setup-summary .ov-flag { width: 90px; height: 50px; margin-top: 5px; }
+.ov-setup-summary h2 { color: #e0b030; font-size: 24px; line-height: 1.2; }
+.ov-starting { font-family: Arial,sans-serif; font-size: 14px; }
+.ov-starting strong { font: 32px ui-monospace,monospace; color: var(--ov-paper); padding-right: 8px; }
+.ov-rule-note { border-top: 1px solid var(--ov-edge); padding-top: 14px; font: 13px/1.6 Arial,sans-serif; }
+.ov-setup-summary .ov-primary { margin-top: auto; width: 100%; }
+.ov-text-button { border: 0; background: none; color: var(--ov-muted); font: 12px Arial,sans-serif !important; text-decoration: underline; text-underline-offset: 3px; padding: 6px 0; }
+.ov-text-button:hover { color: var(--ov-paper); }
+.ov-saved { margin-top: 30px; }
+.ov-save-list { display: grid; gap: 10px; margin-top: 15px; }
+.ov-save { display: flex; justify-content: space-between; gap: 20px; align-items: center; padding: 16px; }
+.ov-save strong { font-size: 16px; font-weight: 400; }
+.ov-save small { font: 11px Arial,sans-serif; color: var(--ov-muted); }
+.ov-save > div:last-child { display: flex; align-items: center; gap: 12px; }
+.ov-storage-note { color: var(--ov-muted); font: 12px/1.5 Arial,sans-serif; margin-top: 22px; }
+.ov-notice { color: #e0b030; padding-top: 12px; font: 13px/1.5 Arial,sans-serif; }
+.ov-save-error { position: fixed; z-index: 80; bottom: 8px; left: 8px; right: 8px; margin: auto; width: fit-content; max-width: calc(100% - 16px); padding: 12px; background: #302118; border: 1px solid #e0b030; color: #e8e1c8; font: 13px/1.5 Arial,sans-serif; }
+.ov-modal-backdrop, .ov-outcome { position: fixed; inset: 0; z-index: 40; background: #09070dd9; display: flex; align-items: center; justify-content: center; padding: 24px; backdrop-filter: blur(4px); }
+.ov-modal { max-width: 520px; width: 100%; max-height: 85dvh; overflow: auto; padding: 30px; display: flex; flex-direction: column; gap: 16px; box-shadow: 0 15px 60px #0009; }
+.ov-modal h2, .ov-outcome h2 { font-size: 24px; color: var(--ov-paper); letter-spacing: .04em; }
+.ov-manual { max-width: 650px; }
+.ov-manual p, .ov-manual li { font: 14px/1.7 Arial,sans-serif; }
+.ov-manual ol { padding-left: 20px; list-style: decimal; }
+.ov-manual li { margin-bottom: 10px; }
+.ov-outcome-card { width: min(100%,600px); padding: 40px; text-align: center; }
+.ov-outcome-card > p:not(.ov-eyebrow) { font: 15px/1.6 Arial,sans-serif; margin-top: 20px; }
+.ov-modal-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 25px; }
+@keyframes ov-die-in { from { opacity: .35; transform: translateY(-3px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes ov-tag-in { from { opacity: 0; } to { opacity: 1; } }
+@media (min-width: 901px) {
+  .ov-commanders > summary, .ov-dispatches > summary { pointer-events: none; }
+}
+@media (max-width: 1100px) and (min-width: 901px) {
+  .ov-game { padding: 12px; }
+  .ov-console { height: calc(100dvh - 24px); gap: 10px; }
+  .ov-columns { grid-template-columns: 150px minmax(0,1fr) 150px; gap: 10px; }
+  .ov-game summary { font-size: 12px; }
+  .ov-commanders, .ov-dispatches { padding: 9px; }
+  .ov-board { gap: 7px; }
+  .ov-filters { gap: 5px; }
+  .ov-filters .ov-button { padding: 6px 9px; font-size: 11px !important; }
+  .ov-actions { gap: 6px; }
+  .ov-actions .ov-button { padding: 9px 11px; font-size: 11px !important; }
+  .ov-topbar { gap: 10px; }
+}
+@media (max-width: 900px) {
+  .ov-game { padding: 12px; }
+  .ov-console { height: auto; min-height: calc(100dvh - 24px); padding-bottom: 150px; }
+  .ov-topbar { flex-wrap: wrap; gap: 12px; }
+  .ov-wordmark { font-size: 20px; }
+  .ov-topbar > .ov-button { order: 1; margin-left: auto; }
+  .ov-turn-status { order: 2; flex-basis: 100%; font-size: 13px; justify-content: flex-start; gap: 7px; text-align: left; padding: 6px 0; }
+  .ov-columns { display: flex; flex-direction: column; gap: 14px; }
+  .ov-board-zone { order: 0; display: flex; flex-direction: column; }
+  .ov-board-toolbar { gap: 10px; }
+  .ov-filters { gap: 5px; }
+  .ov-filters .ov-button { padding: 8px 10px; font-size: 11px !important; }
+  .ov-progress { gap: 6px; }
+  .ov-progress .ov-numeric { font-size: 12px; }
+  .ov-board { grid-template-columns: repeat(2,minmax(0,1fr)); grid-template-rows: auto; gap: 12px; }
+  .ov-territory { min-height: 155px; padding: 14px 8px 10px; }
+  .ov-troops { font-size: 33px; }
+  .ov-country-name { font-size: 15px; }
+  .ov-battle { min-height: 175px; }
+  .ov-commanders { order: 1; }
+  .ov-dispatches { order: 2; }
+  .ov-game summary { margin-bottom: 0; font-size: 14px; }
+  .ov-game details[open] summary { margin-bottom: 15px; }
+  .ov-drawer-hint { display: inline; float: right; }
+  .ov-commanders, .ov-dispatches { display: block; }
+  .ov-commanders .ov-commander-list { max-height: 340px; }
+  .ov-dispatch-list { max-height: 300px; }
+  .ov-panel-foot { display: none; }
+  .ov-bottom { position: fixed; z-index: 20; bottom: 0; left: 0; right: 0; background: #120f17f5; border-top: 1px solid var(--ov-edge); padding: 10px 12px max(10px,env(safe-area-inset-bottom)); flex-direction: column; gap: 8px; }
+  .ov-actions { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); width: 100%; gap: 6px; }
+  .ov-actions .ov-button { padding: 10px 4px; font-size: 10px !important; letter-spacing: .03em; min-height: 42px; }
+  .ov-hint { max-width: 100%; width: 100%; text-align: left; font-size: 12px; min-height: 34px; }
+  .ov-setup { padding: 22px; margin: 5px auto; }
+  .ov-setup-columns { gap: 14px; }
+  .ov-setup-summary { padding: 18px; }
+}
+@media (max-width: 580px) {
+  .ov-setup-columns { grid-template-columns: 1fr; }
+  .ov-setup-summary { gap: 10px; }
+  .ov-country-list { height: 230px; }
+  .ov-back { margin-bottom: 25px; }
+  .ov-setup h1 { font-size: 27px; }
+  .ov-save { align-items: flex-start; flex-direction: column; gap: 12px; }
+  .ov-save > div:last-child { width: 100%; justify-content: space-between; }
+  .ov-setup-choice { padding: 12px; }
+  .ov-setup { padding: 18px; }
+  .ov-modal { padding: 24px; }
+  .ov-modal-backdrop, .ov-outcome { padding: 16px; }
+  .ov-outcome-card { padding: 24px; }
+  .ov-battle-heading h2 { font-size: 14px; }
+  .ov-latin { font-size: 12px; }
+  .ov-dice-rows { flex-direction: column; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ov-game *, .ov-game *::before, .ov-game *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}
+
+.ov-native-dialog { margin: auto; padding: 0; border: 0; color: #9bb05a; background: transparent; max-width: calc(100vw - 32px); max-height: 90dvh; width: min(650px,calc(100vw - 32px)); }
+.ov-native-dialog::backdrop { background: #09070dd9; backdrop-filter: blur(4px); }
+.ov-native-dialog .ov-modal, .ov-native-dialog .ov-outcome-card { margin: 0 auto; }
+.ov-native-dialog .ov-modal { max-height: 85dvh; }

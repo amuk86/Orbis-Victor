@@ -9,3 +9,6 @@ build/
 .next/
 out/
 *.tsbuildinfo
+
+# Compiled Node test fixtures
+.test-build/

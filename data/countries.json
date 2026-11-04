@@ -1,0 +1,977 @@
+[
+  {
+    "name": "Afghanistan",
+    "code": "af",
+    "population": 45.047068
+  },
+  {
+    "name": "Albania",
+    "code": "al",
+    "population": 2.751025
+  },
+  {
+    "name": "Algeria",
+    "code": "dz",
+    "population": 48.028334
+  },
+  {
+    "name": "Andorra",
+    "code": "ad",
+    "population": 0.083753
+  },
+  {
+    "name": "Angola",
+    "code": "ao",
+    "population": 40.21518
+  },
+  {
+    "name": "Antigua and Barbuda",
+    "code": "ag",
+    "population": 0.094626
+  },
+  {
+    "name": "Argentina",
+    "code": "ar",
+    "population": 46.003734
+  },
+  {
+    "name": "Armenia",
+    "code": "am",
+    "population": 2.930915
+  },
+  {
+    "name": "Australia",
+    "code": "au",
+    "population": 27.227096
+  },
+  {
+    "name": "Austria",
+    "code": "at",
+    "population": 9.107266
+  },
+  {
+    "name": "Azerbaijan",
+    "code": "az",
+    "population": 10.454855
+  },
+  {
+    "name": "Bahamas",
+    "code": "bs",
+    "population": 0.404628
+  },
+  {
+    "name": "Bahrain",
+    "code": "bh",
+    "population": 1.675572
+  },
+  {
+    "name": "Bangladesh",
+    "code": "bd",
+    "population": 177.818044
+  },
+  {
+    "name": "Barbados",
+    "code": "bb",
+    "population": 0.282724
+  },
+  {
+    "name": "Belarus",
+    "code": "by",
+    "population": 8.937018
+  },
+  {
+    "name": "Belgium",
+    "code": "be",
+    "population": 11.774642
+  },
+  {
+    "name": "Belize",
+    "code": "bz",
+    "population": 0.428644
+  },
+  {
+    "name": "Benin",
+    "code": "bj",
+    "population": 15.17042
+  },
+  {
+    "name": "Bhutan",
+    "code": "bt",
+    "population": 0.802214
+  },
+  {
+    "name": "Bolivia",
+    "code": "bo",
+    "population": 12.749291
+  },
+  {
+    "name": "Bosnia and Herzegovina",
+    "code": "ba",
+    "population": 3.114242
+  },
+  {
+    "name": "Botswana",
+    "code": "bw",
+    "population": 2.603388
+  },
+  {
+    "name": "Brazil",
+    "code": "br",
+    "population": 213.562666
+  },
+  {
+    "name": "Brunei",
+    "code": "bn",
+    "population": 0.469775
+  },
+  {
+    "name": "Bulgaria",
+    "code": "bg",
+    "population": 6.66766
+  },
+  {
+    "name": "Burkina Faso",
+    "code": "bf",
+    "population": 24.6017
+  },
+  {
+    "name": "Burundi",
+    "code": "bi",
+    "population": 14.729157
+  },
+  {
+    "name": "Cabo Verde",
+    "code": "cv",
+    "population": 0.52963
+  },
+  {
+    "name": "Cambodia",
+    "code": "kh",
+    "population": 18.051219
+  },
+  {
+    "name": "Cameroon",
+    "code": "cm",
+    "population": 30.640817
+  },
+  {
+    "name": "Canada",
+    "code": "ca",
+    "population": 40.467728
+  },
+  {
+    "name": "Central African Republic",
+    "code": "cf",
+    "population": 5.698984
+  },
+  {
+    "name": "Chad",
+    "code": "td",
+    "population": 21.56038
+  },
+  {
+    "name": "Chile",
+    "code": "cl",
+    "population": 19.94585
+  },
+  {
+    "name": "China",
+    "code": "cn",
+    "population": 1412.914089
+  },
+  {
+    "name": "Colombia",
+    "code": "co",
+    "population": 53.936226
+  },
+  {
+    "name": "Comoros",
+    "code": "km",
+    "population": 0.89901
+  },
+  {
+    "name": "Congo, Republic of the",
+    "code": "cg",
+    "population": 6.637786
+  },
+  {
+    "name": "Costa Rica",
+    "code": "cr",
+    "population": 5.174789
+  },
+  {
+    "name": "Côte d'Ivoire",
+    "code": "ci",
+    "population": 33.494346
+  },
+  {
+    "name": "Croatia",
+    "code": "hr",
+    "population": 3.822345
+  },
+  {
+    "name": "Cuba",
+    "code": "cu",
+    "population": 10.892659
+  },
+  {
+    "name": "Cyprus",
+    "code": "cy",
+    "population": 1.382334
+  },
+  {
+    "name": "Czech Republic (Czechia)",
+    "code": "cz",
+    "population": 10.52778
+  },
+  {
+    "name": "Democratic Republic of the Congo",
+    "code": "cd",
+    "population": 116.452162
+  },
+  {
+    "name": "Denmark",
+    "code": "dk",
+    "population": 6.02352
+  },
+  {
+    "name": "Djibouti",
+    "code": "dj",
+    "population": 1.199459
+  },
+  {
+    "name": "Dominica",
+    "code": "dm",
+    "population": 0.065511
+  },
+  {
+    "name": "Dominican Republic",
+    "code": "do",
+    "population": 11.6095
+  },
+  {
+    "name": "Ecuador",
+    "code": "ec",
+    "population": 18.444506
+  },
+  {
+    "name": "Egypt",
+    "code": "eg",
+    "population": 120.101175
+  },
+  {
+    "name": "El Salvador",
+    "code": "sv",
+    "population": 6.391254
+  },
+  {
+    "name": "Equatorial Guinea",
+    "code": "gq",
+    "population": 1.984468
+  },
+  {
+    "name": "Eritrea",
+    "code": "er",
+    "population": 3.682669
+  },
+  {
+    "name": "Estonia",
+    "code": "ee",
+    "population": 1.331062
+  },
+  {
+    "name": "Eswatini",
+    "code": "sz",
+    "population": 1.269859
+  },
+  {
+    "name": "Ethiopia",
+    "code": "et",
+    "population": 138.902185
+  },
+  {
+    "name": "Fiji",
+    "code": "fj",
+    "population": 0.937282
+  },
+  {
+    "name": "Finland",
+    "code": "fi",
+    "population": 5.621739
+  },
+  {
+    "name": "France",
+    "code": "fr",
+    "population": 66.746401
+  },
+  {
+    "name": "Gabon",
+    "code": "ga",
+    "population": 2.6474
+  },
+  {
+    "name": "Gambia",
+    "code": "gm",
+    "population": 2.884079
+  },
+  {
+    "name": "Georgia",
+    "code": "ge",
+    "population": 3.804642
+  },
+  {
+    "name": "Germany",
+    "code": "de",
+    "population": 83.644258
+  },
+  {
+    "name": "Ghana",
+    "code": "gh",
+    "population": 35.697557
+  },
+  {
+    "name": "Greece",
+    "code": "gr",
+    "population": 9.897116
+  },
+  {
+    "name": "Grenada",
+    "code": "gd",
+    "population": 0.117362
+  },
+  {
+    "name": "Guatemala",
+    "code": "gt",
+    "population": 18.967978
+  },
+  {
+    "name": "Guinea",
+    "code": "gn",
+    "population": 15.441992
+  },
+  {
+    "name": "Guinea-Bissau",
+    "code": "gw",
+    "population": 2.297808
+  },
+  {
+    "name": "Guyana",
+    "code": "gy",
+    "population": 0.84089
+  },
+  {
+    "name": "Haiti",
+    "code": "ht",
+    "population": 12.037506
+  },
+  {
+    "name": "Holy See (Vatican City)",
+    "code": "va",
+    "population": 0.000506
+  },
+  {
+    "name": "Honduras",
+    "code": "hn",
+    "population": 11.18476
+  },
+  {
+    "name": "Hungary",
+    "code": "hu",
+    "population": 9.585818
+  },
+  {
+    "name": "Iceland",
+    "code": "is",
+    "population": 0.402329
+  },
+  {
+    "name": "India",
+    "code": "in",
+    "population": 1476.625576
+  },
+  {
+    "name": "Indonesia",
+    "code": "id",
+    "population": 287.886782
+  },
+  {
+    "name": "Iran",
+    "code": "ir",
+    "population": 93.168497
+  },
+  {
+    "name": "Iraq",
+    "code": "iq",
+    "population": 48.007437
+  },
+  {
+    "name": "Ireland",
+    "code": "ie",
+    "population": 5.35695
+  },
+  {
+    "name": "Israel",
+    "code": "il",
+    "population": 9.647689
+  },
+  {
+    "name": "Italy",
+    "code": "it",
+    "population": 58.926166
+  },
+  {
+    "name": "Jamaica",
+    "code": "jm",
+    "population": 2.833404
+  },
+  {
+    "name": "Japan",
+    "code": "jp",
+    "population": 122.427731
+  },
+  {
+    "name": "Jordan",
+    "code": "jo",
+    "population": 11.589532
+  },
+  {
+    "name": "Kazakhstan",
+    "code": "kz",
+    "population": 21.083626
+  },
+  {
+    "name": "Kenya",
+    "code": "ke",
+    "population": 58.636412
+  },
+  {
+    "name": "Kiribati",
+    "code": "ki",
+    "population": 0.138445
+  },
+  {
+    "name": "Kuwait",
+    "code": "kw",
+    "population": 5.102773
+  },
+  {
+    "name": "Kyrgyzstan",
+    "code": "kg",
+    "population": 7.400464
+  },
+  {
+    "name": "Laos",
+    "code": "la",
+    "population": 7.974018
+  },
+  {
+    "name": "Latvia",
+    "code": "lv",
+    "population": 1.835935
+  },
+  {
+    "name": "Lebanon",
+    "code": "lb",
+    "population": 5.897467
+  },
+  {
+    "name": "Lesotho",
+    "code": "ls",
+    "population": 2.389336
+  },
+  {
+    "name": "Liberia",
+    "code": "lr",
+    "population": 5.853949
+  },
+  {
+    "name": "Libya",
+    "code": "ly",
+    "population": 7.539852
+  },
+  {
+    "name": "Liechtenstein",
+    "code": "li",
+    "population": 0.040368
+  },
+  {
+    "name": "Lithuania",
+    "code": "lt",
+    "population": 2.797338
+  },
+  {
+    "name": "Luxembourg",
+    "code": "lu",
+    "population": 0.687448
+  },
+  {
+    "name": "Madagascar",
+    "code": "mg",
+    "population": 33.522052
+  },
+  {
+    "name": "Malawi",
+    "code": "mw",
+    "population": 22.785535
+  },
+  {
+    "name": "Malaysia",
+    "code": "my",
+    "population": 36.385115
+  },
+  {
+    "name": "Maldives",
+    "code": "mv",
+    "population": 0.531517
+  },
+  {
+    "name": "Mali",
+    "code": "ml",
+    "population": 25.932275
+  },
+  {
+    "name": "Malta",
+    "code": "mt",
+    "population": 0.549011
+  },
+  {
+    "name": "Marshall Islands",
+    "code": "mh",
+    "population": 0.035075
+  },
+  {
+    "name": "Mauritania",
+    "code": "mr",
+    "population": 5.461319
+  },
+  {
+    "name": "Mauritius",
+    "code": "mu",
+    "population": 1.265059
+  },
+  {
+    "name": "Mexico",
+    "code": "mx",
+    "population": 132.997658
+  },
+  {
+    "name": "Micronesia",
+    "code": "fm",
+    "population": 0.114182
+  },
+  {
+    "name": "Moldova",
+    "code": "md",
+    "population": 2.961253
+  },
+  {
+    "name": "Monaco",
+    "code": "mc",
+    "population": 0.038087
+  },
+  {
+    "name": "Mongolia",
+    "code": "mn",
+    "population": 3.556798
+  },
+  {
+    "name": "Montenegro",
+    "code": "me",
+    "population": 0.626233
+  },
+  {
+    "name": "Morocco",
+    "code": "ma",
+    "population": 38.762441
+  },
+  {
+    "name": "Mozambique",
+    "code": "mz",
+    "population": 36.63985
+  },
+  {
+    "name": "Myanmar",
+    "code": "mm",
+    "population": 55.184819
+  },
+  {
+    "name": "Namibia",
+    "code": "na",
+    "population": 3.153246
+  },
+  {
+    "name": "Nauru (Naoero)",
+    "code": "nr",
+    "population": 0.012101
+  },
+  {
+    "name": "Nepal",
+    "code": "np",
+    "population": 29.62941
+  },
+  {
+    "name": "Netherlands",
+    "code": "nl",
+    "population": 18.448775
+  },
+  {
+    "name": "New Zealand",
+    "code": "nz",
+    "population": 5.287479
+  },
+  {
+    "name": "Nicaragua",
+    "code": "ni",
+    "population": 7.097329
+  },
+  {
+    "name": "Niger",
+    "code": "ne",
+    "population": 28.814878
+  },
+  {
+    "name": "Nigeria",
+    "code": "ng",
+    "population": 242.431832
+  },
+  {
+    "name": "North Korea",
+    "code": "kp",
+    "population": 26.633691
+  },
+  {
+    "name": "North Macedonia",
+    "code": "mk",
+    "population": 1.804062
+  },
+  {
+    "name": "Norway",
+    "code": "no",
+    "population": 5.652989
+  },
+  {
+    "name": "Oman",
+    "code": "om",
+    "population": 5.671458
+  },
+  {
+    "name": "Pakistan",
+    "code": "pk",
+    "population": 259.299792
+  },
+  {
+    "name": "Palau",
+    "code": "pw",
+    "population": 0.017614
+  },
+  {
+    "name": "Palestine, State of",
+    "code": "ps",
+    "population": 5.69279
+  },
+  {
+    "name": "Panama",
+    "code": "pa",
+    "population": 4.625718
+  },
+  {
+    "name": "Papua New Guinea",
+    "code": "pg",
+    "population": 10.947848
+  },
+  {
+    "name": "Paraguay",
+    "code": "py",
+    "population": 7.095279
+  },
+  {
+    "name": "Peru",
+    "code": "pe",
+    "population": 34.922148
+  },
+  {
+    "name": "Philippines",
+    "code": "ph",
+    "population": 117.724472
+  },
+  {
+    "name": "Poland",
+    "code": "pl",
+    "population": 37.843188
+  },
+  {
+    "name": "Portugal",
+    "code": "pt",
+    "population": 10.395362
+  },
+  {
+    "name": "Qatar",
+    "code": "qa",
+    "population": 3.173559
+  },
+  {
+    "name": "Romania",
+    "code": "ro",
+    "population": 18.800605
+  },
+  {
+    "name": "Russia",
+    "code": "ru",
+    "population": 143.394458
+  },
+  {
+    "name": "Rwanda",
+    "code": "rw",
+    "population": 14.889693
+  },
+  {
+    "name": "Saint Kitts and Nevis",
+    "code": "kn",
+    "population": 0.046992
+  },
+  {
+    "name": "Saint Lucia",
+    "code": "lc",
+    "population": 0.180488
+  },
+  {
+    "name": "Saint Vincent and the Grenadines",
+    "code": "vc",
+    "population": 0.099244
+  },
+  {
+    "name": "Samoa",
+    "code": "ws",
+    "population": 0.220528
+  },
+  {
+    "name": "San Marino",
+    "code": "sm",
+    "population": 0.033605
+  },
+  {
+    "name": "São Tomé and Príncipe",
+    "code": "st",
+    "population": 0.244994
+  },
+  {
+    "name": "Saudi Arabia",
+    "code": "sa",
+    "population": 35.165787
+  },
+  {
+    "name": "Senegal",
+    "code": "sn",
+    "population": 19.366548
+  },
+  {
+    "name": "Serbia",
+    "code": "rs",
+    "population": 6.641964
+  },
+  {
+    "name": "Seychelles",
+    "code": "sc",
+    "population": 0.134959
+  },
+  {
+    "name": "Sierra Leone",
+    "code": "sl",
+    "population": 8.996744
+  },
+  {
+    "name": "Singapore",
+    "code": "sg",
+    "population": 5.905748
+  },
+  {
+    "name": "Slovakia",
+    "code": "sk",
+    "population": 5.451342
+  },
+  {
+    "name": "Slovenia",
+    "code": "si",
+    "population": 2.114574
+  },
+  {
+    "name": "Solomon Islands",
+    "code": "sb",
+    "population": 0.858288
+  },
+  {
+    "name": "Somalia",
+    "code": "so",
+    "population": 20.305907
+  },
+  {
+    "name": "South Africa",
+    "code": "za",
+    "population": 65.453084
+  },
+  {
+    "name": "South Korea",
+    "code": "kr",
+    "population": 51.600388
+  },
+  {
+    "name": "South Sudan",
+    "code": "ss",
+    "population": 12.436037
+  },
+  {
+    "name": "Spain",
+    "code": "es",
+    "population": 47.850793
+  },
+  {
+    "name": "Sri Lanka",
+    "code": "lk",
+    "population": 23.348315
+  },
+  {
+    "name": "Sudan",
+    "code": "sd",
+    "population": 53.282719
+  },
+  {
+    "name": "Suriname",
+    "code": "sr",
+    "population": 0.645256
+  },
+  {
+    "name": "Sweden",
+    "code": "se",
+    "population": 10.701046
+  },
+  {
+    "name": "Switzerland",
+    "code": "ch",
+    "population": 9.007798
+  },
+  {
+    "name": "Syria",
+    "code": "sy",
+    "population": 26.472497
+  },
+  {
+    "name": "Tajikistan",
+    "code": "tj",
+    "population": 10.978598
+  },
+  {
+    "name": "Tanzania",
+    "code": "tz",
+    "population": 72.56378
+  },
+  {
+    "name": "Thailand",
+    "code": "th",
+    "population": 71.559614
+  },
+  {
+    "name": "Timor-Leste",
+    "code": "tl",
+    "population": 1.436923
+  },
+  {
+    "name": "Togo",
+    "code": "tg",
+    "population": 9.930918
+  },
+  {
+    "name": "Tonga",
+    "code": "to",
+    "population": 0.103291
+  },
+  {
+    "name": "Trinidad and Tobago",
+    "code": "tt",
+    "population": 1.513268
+  },
+  {
+    "name": "Tunisia",
+    "code": "tn",
+    "population": 12.415138
+  },
+  {
+    "name": "Turkey (Türkiye)",
+    "code": "tr",
+    "population": 87.926082
+  },
+  {
+    "name": "Turkmenistan",
+    "code": "tm",
+    "population": 7.736632
+  },
+  {
+    "name": "Tuvalu",
+    "code": "tv",
+    "population": 0.009362
+  },
+  {
+    "name": "Uganda",
+    "code": "ug",
+    "population": 52.76147
+  },
+  {
+    "name": "Ukraine",
+    "code": "ua",
+    "population": 39.535848
+  },
+  {
+    "name": "United Arab Emirates",
+    "code": "ae",
+    "population": 11.574682
+  },
+  {
+    "name": "United Kingdom",
+    "code": "gb",
+    "population": 69.931528
+  },
+  {
+    "name": "United States",
+    "code": "us",
+    "population": 349.035494
+  },
+  {
+    "name": "Uruguay",
+    "code": "uy",
+    "population": 3.382537
+  },
+  {
+    "name": "Uzbekistan",
+    "code": "uz",
+    "population": 37.724223
+  },
+  {
+    "name": "Vanuatu",
+    "code": "vu",
+    "population": 0.342564
+  },
+  {
+    "name": "Venezuela",
+    "code": "ve",
+    "population": 28.633711
+  },
+  {
+    "name": "Vietnam",
+    "code": "vn",
+    "population": 102.177431
+  },
+  {
+    "name": "Yemen",
+    "code": "ye",
+    "population": 42.961653
+  },
+  {
+    "name": "Zambia",
+    "code": "zm",
+    "population": 22.521915
+  },
+  {
+    "name": "Zimbabwe",
+    "code": "zw",
+    "population": 17.27358
+  }
+]

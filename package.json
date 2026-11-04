@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build --webpack",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test": "tsc --module commonjs --target es2020 --moduleResolution node --outDir .test-build --esModuleInterop --skipLibCheck --strict src/game/engine.ts src/game/npc.ts src/game/storage.ts src/game/access.ts src/game/commentary.ts && node --test --test-isolation=none tests/*.test.cjs"
   },
   "dependencies": {
     "motion": "^12.43.0",
