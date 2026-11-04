@@ -83,6 +83,7 @@ is not online authentication. These integrations are intentionally deferred.
 | `src/app/game/demo/page.tsx` | Campaign route and metadata |
 | `src/app/game/demo/GameClient.tsx` | Setup, controls, battle, NPC scheduling, saved campaigns |
 | `src/app/game/demo/game.css` | Scoped CRT console styling and responsive layouts |
+| `src/app/game/demo/OutcomeScreen.tsx`, `outcome-quotes.ts` | Full-screen green victory / blood-red defeat and attributed PDF quotations |
 | `src/game/engine.ts` | Pure rules, population table, state and event types |
 | `src/game/npc.ts` | Shared NPC strategy and reasons |
 | `src/game/commentary.ts` | Async local battle commentary |
@@ -95,3 +96,8 @@ is not online authentication. These integrations are intentionally deferred.
 The original React Bits component sources remain unmodified:
 - https://reactbits.dev/r/CRTWarp-JS-CSS.json
 - https://reactbits.dev/r/DecryptedText-JS-CSS.json
+
+Victory reuses the landing page’s green CRT settings; defeat uses blood-red
+phosphor. Ending quotes come from `Gothic_War_Quotes_Latin_and_English.pdf`,
+with author/work attribution and the supplied English translations for Latin.
+Each campaign keeps its selected ending quote when reloaded.

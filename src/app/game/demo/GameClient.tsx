@@ -11,16 +11,17 @@ import { getCommentary } from '@/game/commentary';
 import { BrowserCampaignStore } from '@/game/storage';
 import type { CampaignSummary } from '@/game/storage';
 import { canPlay, LOCAL_OWNER } from '@/game/access';
+import OutcomeScreen from './OutcomeScreen';
 import './game.css';
 
-function Modal({ children, onClose }: { children: React.ReactNode; onClose?: () => void }) {
+function Modal({ children, onClose, className = '', labelledBy }: { children: React.ReactNode; onClose?: () => void; className?: string; labelledBy?: string }) {
   const dialog = useRef<HTMLDialogElement>(null);
   useEffect(() => {
     const node = dialog.current;
     node?.showModal();
     return () => { node?.close(); };
   }, []);
-  return <dialog ref={dialog} className="ov-native-dialog" onCancel={event => { event.preventDefault(); onClose?.(); }}>{children}</dialog>;
+  return <dialog ref={dialog} className={`ov-native-dialog ${className}`} aria-labelledby={labelledBy} onCancel={event => { event.preventDefault(); onClose?.(); }}>{children}</dialog>;
 }
 
 function Flag({ country }: { country: Country }) {
@@ -222,7 +223,21 @@ export default function GameClient() {
         <details open className="ov-dispatches ov-panel"><summary>Dispatches <span className="ov-drawer-hint">↕</span></summary><div className="ov-dispatch-list" role="log" aria-label="Campaign dispatches" aria-live="off">{game.events.length > historyLimit && <button className="ov-text-button" onClick={() => setHistoryLimit(n => n+300)}>Show earlier dispatches</button>}{game.events.filter(e => e.kind !== 'battle').slice(-historyLimit).map(e => <article key={e.id} className={`ov-dispatch ov-event-${e.kind}`}><small className="ov-dispatch-time">R{e.round} · {game.players.find(p => p.id === e.actorId)?.name}</small><p>{e.text}</p>{e.reason && <p className="ov-dispatch-reason">{e.reason}</p>}</article>)}<div ref={dispatchEnd} /></div></details>
       </div>
       <footer className="ov-bottom"><div className="ov-actions"><button className="ov-button ov-primary" disabled={!canRoll} onClick={roll} title={canRoll ? 'Roll paired dice' : hint}>Roll dice</button><button className="ov-button" disabled={!controls || game.phase !== 'battle'} onClick={() => human({ type:'stop' })} title="Stop an active attack and end your turn">Stop attack</button><button className="ov-button" disabled={!controls || game.phase !== 'action'} onClick={() => human({ type:'end' })} title={game.phase === 'reinforce' ? 'Place all reinforcements first' : game.phase === 'battle' ? 'Stop the active attack to end your turn' : 'Pass to the next commander'}>End turn</button><button className={`ov-button ${fast ? 'is-active' : ''}`} onClick={() => setFast(v => !v)} aria-pressed={fast}>Fast-forward <span className="ov-speed">{fast ? '6×' : ''}</span></button></div><p className="ov-hint" role="status">{hint}</p></footer>
-      {(game.phase === 'finished' || (defeated && !watchDefeat)) && <Modal><div className="ov-outcome-shell" aria-label="Campaign result"><div className="ov-outcome-card ov-panel"><p className="ov-eyebrow">{game.winnerId === HUMAN_ID ? 'Veni, vidi, vici' : 'Vae victis'}</p><h2>{game.winnerId === HUMAN_ID ? 'The world is yours.' : 'Your command has fallen.'}</h2><p>{game.winnerId === HUMAN_ID ? `All ten nations united in round ${game.round}.` : game.winnerId ? `${game.players.find(p => p.id === game.winnerId)?.name} has conquered the world.` : 'Your last country has been conquered. The campaign continues without you.'}</p><div className="ov-modal-actions"><button className="ov-button ov-primary" onClick={leave}>Choose a new campaign</button>{!game.winnerId && <button className="ov-button" onClick={() => setWatchDefeat(true)}>Watch the remaining war</button>}</div></div></div></Modal>}
+      {(game.phase === 'finished' || (defeated && !watchDefeat)) && (
+        <Modal className="ov-outcome-dialog" labelledBy="ov-outcome-title">
+          <OutcomeScreen
+            won={game.winnerId === HUMAN_ID}
+            campaignId={game.id}
+            summary={game.winnerId === HUMAN_ID
+              ? `All ten nations united in round ${game.round}.`
+              : game.winnerId
+                ? `${game.players.find(p => p.id === game.winnerId)?.name} has conquered the world.`
+                : 'Your last banner has fallen. Your command is at an end.'}
+            onNewCampaign={leave}
+            onSpectate={!game.winnerId ? () => setWatchDefeat(true) : undefined}
+          />
+        </Modal>
+      )}
       {menu && <Modal onClose={() => setMenu(false)}><section className="ov-modal ov-panel" role="dialog" aria-modal="true" aria-labelledby="menu-title"><p className="ov-eyebrow">Campaign paused</p><h2 id="menu-title">Field headquarters</h2><button autoFocus className="ov-button ov-primary" onClick={() => setMenu(false)}>Resume campaign</button><button className="ov-button" onClick={() => setHelp(true)}>Field manual</button><button className="ov-button" onClick={() => { setSpectator(v => !v); setMenu(false); }}>{spectator ? 'Resume command' : 'Watch as spectator'}</button><button className="ov-button" onClick={leave}>Saved campaigns / New game</button><Link href="/" className="ov-text-button">Return to title screen</Link><p className="ov-muted">Progress saves after every move in this browser.</p></section></Modal>}
     </section>}
     {help && <Modal onClose={() => setHelp(false)}><section className="ov-modal ov-manual ov-panel" role="dialog" aria-modal="true" aria-labelledby="manual-title"><h2 id="manual-title">The field manual</h2><p>Conquer all ten countries. Distance does not matter.</p><ol><li>Round one has no reinforcements. From round two, place two soldiers per country you own before acting.</li><li>Select your base, then an enemy. Roll to start your one attack this turn. Keep rolling or stop to end the turn.</li><li>Both sides roll the smaller of available attackers (troops minus one) and defenders. Dice fight in order. Ties cause no losses.</li><li>A conquest changes the owner and installs a garrison of at least two, or half the original soldier value, rounded down.</li><li>Outside combat, select your country and click another of yours to transfer one soldier. Click the base again to deselect. Always leave one behind.</li><li>End turn to pass. Fast-forward speeds NPC steps sixfold while showing every action and its reason.</li></ol><p className="ov-muted">Gold Y identifies your command. Unique letter badges identify rivals. Each commander’s row shows countries / total soldiers.</p><button autoFocus className="ov-button ov-primary" onClick={() => setHelp(false)}>Understood</button></section></Modal>}
