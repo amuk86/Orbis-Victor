@@ -7,22 +7,36 @@
     "build": "next build --webpack",
     "start": "next start",
     "lint": "eslint",
-    "test": "tsc --module commonjs --target es2020 --moduleResolution node --outDir .test-build --esModuleInterop --skipLibCheck --strict src/game/engine.ts src/game/npc.ts src/game/storage.ts src/game/access.ts src/game/commentary.ts src/game/analytics.ts && node --test --test-isolation=none tests/*.test.cjs"
+    "test": "tsc --module commonjs --target es2020 --moduleResolution node --outDir .test-build --esModuleInterop --skipLibCheck --strict src/game/engine.ts src/game/npc.ts src/game/storage.ts src/game/access.ts src/game/commentary.ts src/game/analytics.ts && node --test --test-isolation=none tests/*.test.cjs",
+    "test:cloud:compile": "tsc -p tsconfig.cloud-tests.json",
+    "test:cloud:unit": "npm run test:cloud:compile && node --conditions=react-server --test --test-isolation=none tests/cloud/unit.test.cjs",
+    "test:cloud:integration": "npm run test:cloud:compile && node --conditions=react-server --test --test-isolation=none tests/cloud/emulator.test.cjs",
+    "test:emulators": "node scripts/emulators.cjs test",
+    "emulators": "node scripts/emulators.cjs start",
+    "test:cloud:http": "node --test --test-isolation=none tests/cloud/http-smoke.cjs"
   },
   "dependencies": {
+    "firebase": "^13.2.0",
+    "firebase-admin": "^14.5.0",
     "motion": "^12.43.0",
     "next": "16.4.5",
     "react": "19.3.0",
-    "react-dom": "19.3.0"
+    "react-dom": "19.3.0",
+    "server-only": "^0.0.1"
   },
   "devDependencies": {
+    "@firebase/rules-unit-testing": "^6.0.0",
     "@tailwindcss/postcss": "^4.3.4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.4.5",
+    "firebase-tools": "^15.34.2",
     "tailwindcss": "^4",
     "typescript": "^5"
+  },
+  "overrides": {
+    "@grpc/grpc-js": "^1.14.7"
   }
 }

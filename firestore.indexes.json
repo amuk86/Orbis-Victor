@@ -1,0 +1,8 @@
+{
+  "indexes": [{"collectionGroup":"campaigns","queryScope":"COLLECTION","fields":[{"fieldPath":"ownerId","order":"ASCENDING"},{"fieldPath":"status","order":"ASCENDING"},{"fieldPath":"updatedAt","order":"DESCENDING"},{"fieldPath":"__name__","order":"DESCENDING"}]}],
+  "fieldOverrides": [
+    {"collectionGroup":"campaigns","fieldPath":"state","indexes":[]},
+    {"collectionGroup":"history","fieldPath":"json","indexes":[]},
+    {"collectionGroup":"chunks","fieldPath":"data","indexes":[]}
+  ]
+}

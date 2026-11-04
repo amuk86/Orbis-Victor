@@ -62,6 +62,12 @@ export function createGame(pool: Country[], chosenCode: string, rng: RNG, id: st
   const chosen = pool.find(c => c.code === chosenCode);
   if (!chosen || new Set(pool.map(c => c.code)).size !== pool.length || pool.length < 10) throw new Error('Choose from at least ten unique countries.');
   const selected = [chosen, ...shuffle(pool.filter(c => c.code !== chosenCode), rng).slice(0, 9)];
+  return initialiseGame(selected, rng, id);
+}
+
+/** Shared canonical initializer, also used to replay explicit legacy imports. */
+export function initialiseGame(selected: Country[], rng: RNG, id: string): GameState {
+  if (selected.length !== 10 || new Set(selected.map(c => c.code)).size !== 10) throw new Error('Ten distinct countries required.');
   const badges = new Set(['Y']);
   const players = selected.map((c, i) => {
     const letters = c.name.normalize('NFD').toUpperCase().replace(/[^A-Z]/g, '') + 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -78,7 +84,7 @@ export function createGame(pool: Country[], chosenCode: string, rng: RNG, id: st
   s.events.push({ id: 1, turn: 1, round: 1, actorId: currentPlayer(s).id, kind: 'start', text: `${currentPlayer(s).name} takes the first turn.`, reason: 'First commander and fixed turn order drawn randomly. No reinforcements in round 1.' });
   return s;
 }
-export function transition(state: GameState, action: Action, rng: RNG): Transition {
+export function transition(state: GameState, action: Action, rng: RNG, eventOffset = 0): Transition {
   const reject = (error: string): Transition => ({ state, events: [], error });
   if (state.phase === 'finished') return reject('The campaign is over.');
   if (currentPlayer(state).id !== action.actorId) return reject('Only the current commander can act.');
@@ -89,7 +95,7 @@ export function transition(state: GameState, action: Action, rng: RNG): Transiti
   const s: GameState = { ...state, countries: state.countries.map(c => ({ ...c })), events: [...state.events], attack: state.attack ? { ...state.attack } : null };
   const emitted: GameEvent[] = [];
   const log = (kind: string, text: string, reason?: string, battle?: Battle) => {
-    const event: GameEvent = { id: s.events.length + 1, turn: s.turn, round: s.round, actorId: kind === 'turn' ? currentPlayer(s).id : action.actorId, kind, text, ...(reason !== undefined ? { reason } : {}), ...(battle ? { battle } : {}) };
+    const event: GameEvent = { id: eventOffset + s.events.length + 1, turn: s.turn, round: s.round, actorId: kind === 'turn' ? currentPlayer(s).id : action.actorId, kind, text, ...(reason !== undefined ? { reason } : {}), ...(battle ? { battle } : {}) };
     s.events.push(event); emitted.push(event);
   };
   const nextTurn = () => {
@@ -136,7 +142,7 @@ export function transition(state: GameState, action: Action, rng: RNG): Transiti
     a.soldiers -= attackerLosses; d.soldiers -= defenderLosses;
     const outcome = attackerLosses && defenderLosses ? 'both' : defenderLosses ? 'attacker' : attackerLosses ? 'defender' : 'tie';
     const b: Battle = {
-      id: s.events.length + 1, source: a.name, target: d.name,
+      id: eventOffset + s.events.length + 1, source: a.name, target: d.name,
       attacker: currentPlayer(s).name, defender: s.players.find(p => p.id === d.ownerId)!.name,
       attackerDice, defenderDice, attackerLosses, defenderLosses, outcome,
       conquered: d.soldiers === 0, eliminated: false, commentary: '',

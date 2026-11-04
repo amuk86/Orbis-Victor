@@ -1,0 +1,21 @@
+.cloud-page { min-height:100dvh; padding:28px; background:#120f17; color:#9bb05a; }
+.cloud-panel { max-width:1000px; margin:20px auto; border:2px solid #4b5320; border-radius:12px; padding:28px; background:#1b1722; }
+.cloud-panel h1 { font-size:clamp(28px,4vw,42px); margin:22px 0; color:#e8e1c8; }
+.cloud-panel h2 { font-size:20px; margin:24px 0 12px; }
+.cloud-panel p { font:14px/1.7 Arial,sans-serif; margin:12px 0; }
+.cloud-panel a { text-underline-offset:4px; }
+.cloud-panel label { display:block; margin:14px 0; font:14px Arial,sans-serif; }
+.cloud-panel input,.cloud-panel select { display:block; width:100%; padding:12px; margin-top:8px; border:1px solid #4b5320; background:#120f17; color:#e8e1c8; font:14px Arial,sans-serif; }
+.cloud-panel form { max-width:440px; }
+.cloud-panel button,.cloud-button { display:inline-block; padding:11px 15px; margin:6px 8px 6px 0; border:1px solid #6f7f45; background:#4b5320; color:#e8e1c8; text-decoration:none; cursor:pointer; font-size:12px; }
+.cloud-panel button:disabled { opacity:.5; cursor:wait; }
+.cloud-panel :is(button,a,input,select):focus-visible,.cloud-toolbar :is(a,button):focus-visible { outline:2px solid #e8e1c8; outline-offset:4px; }
+.cloud-panel input[type=checkbox] { display:inline; width:auto; margin:0 8px 0 0; }
+.cloud-actions { display:flex; flex-wrap:wrap; gap:8px; }
+.cloud-notice { border:1px solid #b57536; padding:12px; color:#e8c79a; }
+.cloud-save { border:1px solid #4b5320; padding:16px; margin:12px 0; }
+.cloud-mode { color:#bdc890; font:12px Arial,sans-serif; }
+.cloud-toolbar { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:10px; background:#1b1722; color:#9bb05a; padding:10px 24px; border-bottom:1px solid #4b5320; font:12px/1.5 Arial,sans-serif; }
+.cloud-toolbar button,.cloud-toolbar a { color:#c5d38c; padding:5px; text-decoration:underline; cursor:pointer; }
+.cloud-error { margin:0; padding:12px 24px; background:#351a1c; color:#edb3a8; font:13px/1.6 Arial,sans-serif; }
+@media(max-width:600px){.cloud-page{padding:12px;}.cloud-panel{padding:20px;margin:8px auto;}.cloud-toolbar{padding:10px 16px;}}

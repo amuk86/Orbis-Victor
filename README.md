@@ -2,9 +2,14 @@
 
 Conquer the world. The die is cast.
 
-A local single-player conquest game built with Next.js App Router, TypeScript,
+A single-player conquest game with separate local-demo and Firebase cloud modes, built with Next.js App Router, TypeScript,
 Tailwind CSS v4, Cinzel, and React Bits CRTWarp / DecryptedText. The finished
-landing page is preserved; Press Play opens setup and gameplay at `/game/demo`.
+landing page is preserved; Press Play opens `/play`. The independent local game remains at `/game/demo`.
+
+**Firebase Authentication, Firestore, emulators and Vercel setup:**
+[Read the migration guide](docs/FIREBASE.md). Copy `.env.example` to ignored
+`.env.local` to configure cloud services. No production deployment or rules
+publication has been performed.
 
 ## Run locally
 
@@ -15,7 +20,8 @@ npm install
 npm run dev
 ```
 
-Open http://localhost:3000 and press **Play**. Choose your country and begin.
+For the credential-free local demo, open http://localhost:3000/game/demo.
+For configured cloud play, open http://localhost:3000/play or press **Play**.
 Keep the terminal open; `Ctrl+C` stops the app.
 
 ```sh
@@ -25,7 +31,7 @@ npm start       # serve the production build locally
 ```
 
 The initial installation/build needs internet access for packages and the existing
-Google Fonts configuration. Cinzel is then served locally by Next.js. During play,
+Google Fonts configuration. Cinzel is then served locally by Next.js. In local-demo play,
 only optional flag images use the network; a three-stripe flag appears offline.
 Population data for all 195 countries is bundled; see [data/README.md](data/README.md).
 
@@ -58,10 +64,12 @@ with a reason; React schedules each step. Rendering pauses when the tab is hidde
 `CampaignStore` isolates persistence; `PlayAccess` isolates the local owner check.
 `getCommentary` is an async, local template service for later replacement.
 
-No new dependencies were added for gameplay. Tests use TypeScript and Node's
-built-in test runner. No authentication, cloud database, live sharing, LLM API,
-or deployment is configured. Local spectator mode disables human controls; it
-is not online authentication. These integrations are intentionally deferred.
+The local demo still needs no authentication or cloud connection. Cloud play now
+uses Firebase Authentication, Admin-verified commands, Firestore transactions,
+separate history pages, and public campaign links. New dependencies are Firebase
+client/Admin SDKs, the server-only guard, and emulator/security-rule test tools.
+Production credentials, provider setup, rules/index publication and Vercel
+deployment remain manual. LLM commentary is still local templates.
 
 ## Rule interpretations
 

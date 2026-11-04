@@ -3,7 +3,7 @@ import CRTWarp from "@/components/CRTWarp";
 import DecryptedText from "@/components/DecryptedText";
 
 // Change to "/login" when the sign-in screen exists.
-const PLAY_HREF = "/game/demo";
+const PLAY_HREF = "/play";
 const OLIVE_DARK = "#4b5320";
 const OLIVE_LIGHT = "#9db35a";
 const TUBE = "#120f17";

@@ -12,3 +12,16 @@ out/
 
 # Compiled Node test fixtures
 .test-build/
+
+# Firebase/private deployment configuration
+.env.*
+!.env.example
+*service-account*.json
+*firebase-adminsdk*.json
+.firebase/
+firebase-debug.log*
+firestore-debug.log*
+ui-debug.log*
+.cloud-test-build/
+.emulator-data/
+.vercel/

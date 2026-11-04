@@ -12,6 +12,7 @@ import { BrowserCampaignStore } from '@/game/storage';
 import type { CampaignSummary } from '@/game/storage';
 import { canPlay, LOCAL_OWNER } from '@/game/access';
 import OutcomeScreen from './OutcomeScreen';
+import type { RemoteGame } from '@/cloud/game';
 import './game.css';
 
 function Modal({ children, onClose, className = '', labelledBy }: { children: React.ReactNode; onClose?: () => void; className?: string; labelledBy?: string }) {
@@ -29,9 +30,11 @@ function Flag({ country }: { country: Country }) {
   return <span className="ov-flag" aria-hidden="true">{failed ? <span className="ov-flag-fallback"><i /><i /><i /></span> : <img src={`https://flagcdn.com/w80/${country.code}.png`} alt="" width={80} height={48} onError={() => setFailed(true)} loading="lazy" />}</span>;
 }
 
-export default function GameClient() {
-  const [game, setGame] = useState<GameState | null>(null);
+export default function GameClient({ remote }: { remote?: RemoteGame } = {}) {
+  const [localGame, setGame] = useState<GameState | null>(null);
+  const game = remote?.state ?? localGame;
   const stateRef = useRef<GameState | null>(null);
+  useEffect(() => { if (remote) stateRef.current = remote.state; }, [remote]);
   const store = useMemo(() => new BrowserCampaignStore(), []);
   const [saves, setSaves] = useState<CampaignSummary[]>([]);
   const [country, setCountry] = useState('za');
@@ -54,11 +57,11 @@ export default function GameClient() {
   const turnBanner = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    try { setSaves(store.list()); } catch { setSaveError('Browser storage is unavailable. You can play, but progress cannot be saved.'); }
+    try { if (!remote) setSaves(store.list()); } catch { setSaveError('Browser storage is unavailable. You can play, but progress cannot be saved.'); }
     const onVisibility = () => setVisible(!document.hidden);
     document.addEventListener('visibilitychange', onVisibility);
     return () => document.removeEventListener('visibilitychange', onVisibility);
-  }, [store]);
+  }, [store, !!remote]);
 
   const commit = useCallback((next: GameState) => {
     stateRef.current = next; setGame(next);
@@ -67,26 +70,34 @@ export default function GameClient() {
   }, [store]);
 
   const send = useCallback((action: Action) => {
+    if (remote) {
+      if (remote.pending || !remote.canControl) return;
+      const { actorId, reason, ...command } = action; void actorId; void reason;
+      void remote.send(command);
+      return;
+    }
     const s = stateRef.current;
     if (!s) return;
     const result = transition(s, action, Math.random);
     if (result.error) { setMessage(result.error); return; }
     setMessage(''); commit(result.state);
-  }, [commit]);
+  }, [commit, remote]);
 
   const humanCount = game ? owned(game, HUMAN_ID).length : 0;
   const defeated = !!game && humanCount === 0;
   const player = game ? currentPlayer(game) : null;
-  const controls = !!game && !spectator && canPlay(game, LOCAL_OWNER) && !menu;
+  const controls = !!game && !spectator && canPlay(game, LOCAL_OWNER) && !menu && (!remote || (remote.canControl && !remote.pending));
 
   useEffect(() => {
+    if (remote && (!remote.canControl || remote.pending)) return;
     if (!game || game.phase === 'finished' || currentPlayer(game).human || menu || !visible || (defeated && !watchDefeat)) return;
     const timer = window.setTimeout(() => {
+      if (remote) { void remote.npcStep(); return; }
       const action = nextNpcAction(game);
       if (action) send(action);
     }, fast ? 170 : 1020);
     return () => window.clearTimeout(timer);
-  }, [game, fast, menu, visible, defeated, watchDefeat, send]);
+  }, [game, fast, menu, visible, defeated, watchDefeat, send, remote]);
 
   useEffect(() => {
     if (!game) return;
@@ -117,6 +128,7 @@ export default function GameClient() {
     } catch { setMessage('This saved campaign could not be opened. Start a new campaign or choose another save.'); }
   }
   function leave() {
+    if (remote) { remote.leave(); return; }
     stateRef.current = null; setGame(null); setMenu(false); setHelp(false); setMessage('');
     try { setSaves(store.list()); } catch { /* The storage warning remains visible. */ }
   }
@@ -149,6 +161,7 @@ export default function GameClient() {
     if (!game || !controls) return;
     if (game.phase === 'battle') { human({ type: 'roll' }); return; }
     if (selected && target) {
+      if (remote) { void remote.launch(selected, target); return; }
       human({ type: 'attack', source: selected, target });
       // Declare and roll as two logged engine transitions, displayed in the same battle step.
       const s = stateRef.current;
@@ -161,7 +174,7 @@ export default function GameClient() {
   const canRoll = controls && !!game && (game.phase === 'battle' || (game.phase === 'action' && !game.attackUsed && !!selectedCountry && selectedCountry.soldiers >= 2 && !!targetCountry));
   const battle = game?.lastBattle;
   const status = !game ? '' : game.phase === 'finished' ? `${game.winnerId === HUMAN_ID ? 'VICTORY' : 'CAMPAIGN OVER'}` : `${player?.human ? 'YOUR TURN' : `${player?.name.toUpperCase()}'S TURN`} · ${game.phase === 'reinforce' ? `place ${game.reinforcements} soldiers` : game.phase === 'battle' ? 'attack in progress' : game.attackUsed ? 'attack complete' : 'choose your move'}`;
-  const hint = message || (spectator ? 'Spectator mode: resume command from the menu to play.' : !game ? '' : game.phase === 'finished' ? 'The world is under one command.' : !player?.human ? `${fast ? 'Fast-forward' : 'Following NPC moves'} · every decision and roll remains visible.` : game.phase === 'reinforce' ? `Click your countries to place ${game.reinforcements} remaining soldiers.` : game.phase === 'battle' ? 'Roll to continue the attack, or stop to end your turn.' : game.attackUsed ? 'Transfer soldiers if needed, then end your turn.' : target ? 'Roll dice to launch your one attack this turn.' : selected ? 'Choose an enemy to attack, or your other country to transfer one soldier. Click the selected base to deselect.' : 'Select your base, then an enemy. You can also end your turn.');
+  const hint = message || (remote && !remote.canControl ? 'Public spectator view. Only the signed-in owner can control this campaign.' : spectator ? 'Spectator mode: resume command from the menu to play.' : !game ? '' : game.phase === 'finished' ? 'The world is under one command.' : !player?.human ? `${fast ? 'Fast-forward' : 'Following NPC moves'} · every decision and roll remains visible.` : game.phase === 'reinforce' ? `Click your countries to place ${game.reinforcements} remaining soldiers.` : game.phase === 'battle' ? 'Roll to continue the attack, or stop to end your turn.' : game.attackUsed ? 'Transfer soldiers if needed, then end your turn.' : target ? 'Roll dice to launch your one attack this turn.' : selected ? 'Choose an enemy to attack, or your other country to transfer one soldier. Click the selected base to deselect.' : 'Select your base, then an enemy. You can also end your turn.');
 
   return <main className="ov-game">
     <div className="ov-background" aria-hidden="true"><CRTWarp color="#4b5320" backgroundColor="#120f17" mask="aperture" curvature={0.25} persistence={0.4} brightness={0.65} mouseReact={false} changeOnClick={false} style={{ position: 'absolute', inset: 0 }} /><div /></div>
@@ -238,7 +251,7 @@ export default function GameClient() {
           />
         </Modal>
       )}
-      {menu && <Modal onClose={() => setMenu(false)}><section className="ov-modal ov-panel" role="dialog" aria-modal="true" aria-labelledby="menu-title"><p className="ov-eyebrow">Campaign paused</p><h2 id="menu-title">Field headquarters</h2><button autoFocus className="ov-button ov-primary" onClick={() => setMenu(false)}>Resume campaign</button><Link href="/analytics" className="ov-button">Player &amp; platform analytics</Link><button className="ov-button" onClick={() => setHelp(true)}>Field manual</button><button className="ov-button" onClick={() => { setSpectator(v => !v); setMenu(false); }}>{spectator ? 'Resume command' : 'Watch as spectator'}</button><button className="ov-button" onClick={leave}>Saved campaigns / New game</button><Link href="/" className="ov-text-button">Return to title screen</Link><p className="ov-muted">Progress saves after every move in this browser.</p></section></Modal>}
+      {menu && <Modal onClose={() => setMenu(false)}><section className="ov-modal ov-panel" role="dialog" aria-modal="true" aria-labelledby="menu-title"><p className="ov-eyebrow">Campaign paused</p><h2 id="menu-title">Field headquarters</h2><button autoFocus className="ov-button ov-primary" onClick={() => setMenu(false)}>Resume campaign</button><Link href="/analytics" className="ov-button">Player &amp; platform analytics</Link><button className="ov-button" onClick={() => setHelp(true)}>Field manual</button><button className="ov-button" onClick={() => { setSpectator(v => !v); setMenu(false); }}>{spectator ? 'Resume command' : 'Watch as spectator'}</button><button className="ov-button" onClick={leave}>{remote ? 'My cloud campaigns / New game' : 'Saved campaigns / New game'}</button><Link href="/" className="ov-text-button">Return to title screen</Link><p className="ov-muted">{remote ? 'Every confirmed move is saved in Firestore.' : 'Progress saves after every move in this browser.'}</p></section></Modal>}
     </section>}
     {help && <Modal onClose={() => setHelp(false)}><section className="ov-modal ov-manual ov-panel" role="dialog" aria-modal="true" aria-labelledby="manual-title"><h2 id="manual-title">The field manual</h2><p>Conquer all ten countries. Distance does not matter.</p><ol><li>Round one has no reinforcements. From round two, place two soldiers per country you own before acting.</li><li>Select your base, then an enemy. Roll to start your one attack this turn. Keep rolling or stop to end the turn.</li><li>Both sides roll the smaller of available attackers (troops minus one) and defenders. Dice fight in order. Ties cause no losses.</li><li>A conquest changes the owner and installs a garrison of at least two, or half the original soldier value, rounded down.</li><li>Outside combat, select your country and click another of yours to transfer one soldier. Click the base again to deselect. Always leave one behind.</li><li>End turn to pass. Fast-forward speeds NPC steps sixfold while showing every action and its reason.</li></ol><p className="ov-muted">Gold Y identifies your command. Unique letter badges identify rivals. Each commander’s row shows countries / total soldiers.</p><button autoFocus className="ov-button ov-primary" onClick={() => setHelp(false)}>Understood</button></section></Modal>}
     {saveError && <p className="ov-save-error" role="alert">{saveError}</p>}
