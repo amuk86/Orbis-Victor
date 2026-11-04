@@ -4,3 +4,8 @@ node_modules/
 dist/
 build/
 .DS_Store
+
+# Next.js
+.next/
+out/
+*.tsbuildinfo

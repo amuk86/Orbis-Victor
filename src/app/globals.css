@@ -1,0 +1,24 @@
+@import "tailwindcss";
+
+html, body {
+  min-height: 100%;
+  background: #120f17;
+  color: #9db35a;
+}
+
+/* Keep the screen inside mobile browser chrome. */
+.title-screen { height: 100dvh; }
+.title-heading { max-width: 100%; text-wrap: balance; }
+
+@media (max-width: 359px) {
+  .title-heading { font-size: 2.5rem; }
+  .play-button { padding-inline: 1.5rem; font-size: 1rem; }
+}
+
+/* Keep the action visible on short landscape screens. */
+@media (max-height: 500px) {
+  .title-heading { font-size: clamp(2rem, 8vh, 3rem); }
+  .title-tagline { margin-bottom: 0.5rem; }
+  .title-slogan { margin-top: 0.5rem; font-size: 0.875rem; }
+  .play-button { margin-top: 1rem; padding-block: 0.5rem; font-size: 1rem; }
+}
