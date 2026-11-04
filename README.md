@@ -19,7 +19,7 @@ Open http://localhost:3000 and press **Play**. Choose your country and begin.
 Keep the terminal open; `Ctrl+C` stops the app.
 
 ```sh
-npm test        # 17 engine, NPC, persistence, access and commentary tests
+npm test        # 25 rules, analytics, persistence, access and commentary tests
 npm run build   # production build, including TypeScript checks
 npm start       # serve the production build locally
 ```
@@ -89,6 +89,7 @@ is not online authentication. These integrations are intentionally deferred.
 | `src/game/commentary.ts` | Async local battle commentary |
 | `src/game/storage.ts` | Replaceable local save adapter and validation |
 | `src/game/access.ts` | Local owner/spectator capability boundary |
+| `src/game/analytics.ts`, `src/app/analytics/` | Event-derived player and local platform statistics |
 | `data/countries.json`, `data/README.md` | 195-country population snapshot and attribution |
 | `tests/*.test.cjs` | Rules, full campaign simulations, saves and access tests |
 | `package.json`, `.gitignore` | Test command and ignored compiled test output |
@@ -101,3 +102,27 @@ Victory reuses the landing page’s green CRT settings; defeat uses blood-red
 phosphor. Ending quotes come from `Gothic_War_Quotes_Latin_and_English.pdf`,
 with author/work attribution and the supplied English translations for Latin.
 Each campaign keeps its selected ending quote when reloaded.
+
+## Player and platform analytics
+
+Open **View analytics** from setup, **Player & platform analytics** from the game
+menu, or the analytics link on an ending screen. Direct route: `/analytics`.
+
+- **Your performance:** saved campaigns, wins/losses, completed-outcome win rate,
+  attacks, captures, eliminations, casualties, dice distribution and country results.
+- **Platform overview:** activity across every human/NPC commander in all valid
+  saves in this browser, including battle rounds, dice, casualties and NPC decisions.
+- **Campaign details:** current holdings, armies and combat statistics for each
+  commander. The archive lets you choose which campaign to inspect.
+
+No telemetry is sent. Statistics are calculated from the existing saved event logs
+and current board, without changing gameplay. A resumed save is counted once.
+Player defeat counts when the last country falls; the NPC war can remain ongoing.
+Win rate excludes unresolved player outcomes. Captures include recaptures, and
+dice statistics include attacking and defending. One battle round counts once
+for platform totals; individual dice count both sides.
+
+This is a **local platform overview**, not cross-user or cross-device analytics.
+Deleting a campaign removes it from the figures, and clearing site storage clears
+all data. Refresh reloads saves; changes made in another tab also refresh the
+dashboard automatically. Invalid saves are excluded. No dependencies were added.

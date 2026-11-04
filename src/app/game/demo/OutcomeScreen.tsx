@@ -45,7 +45,7 @@ export default function OutcomeScreen({ won, campaignId, summary, onNewCampaign,
           <button className="ov-button ov-primary" onClick={onNewCampaign}>Choose a new campaign</button>
           {onSpectate && <button className="ov-button" onClick={onSpectate}>Watch the remaining war</button>}
         </div>
-        <Link className="ov-result-home" href="/">Return to title screen</Link>
+        <div className="ov-result-links"><Link className="ov-result-home" href="/analytics">View player &amp; platform analytics</Link><Link className="ov-result-home" href="/">Return to title screen</Link></div>
       </div>
     </section>
   );

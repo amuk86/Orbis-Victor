@@ -303,3 +303,8 @@
   .ov-result-actions { flex-direction: column; margin-top: 30px; }
   .ov-result-actions .ov-button { min-height: 46px; }
 }
+
+.ov-result-links { display:flex; justify-content:center; flex-wrap:wrap; gap:0 24px; }
+
+.ov-setup-navigation { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:12px; margin-bottom:30px; }
+.ov-setup-navigation .ov-back { margin-bottom:0; }

@@ -15,10 +15,12 @@ test('browser store retains independent campaigns, active battle and full event 
   s=transition(s,{type:'roll',actorId:'human'},()=>.5).state;
   assert.equal(isGameState(s),true);store.save(s);
   assert.deepEqual(store.load('one'),s);
+  assert.deepEqual(store.all(),[s]);
   assert.equal(store.load('one').phase,'battle');
   store.save(createGame(pool,'jp',()=>.3,'two'));assert.equal(store.list().length,2);
   store.remove('one');assert.equal(store.list().length,1);assert.equal(store.load('one'),null);
   values.set('orbis-victor:campaign:v1:bad','{"state":{}}');assert.equal(store.list().length,1);
+  assert.equal(store.all().length,1);
   assert.throws(()=>store.load('bad'));
   delete global.localStorage;
 });

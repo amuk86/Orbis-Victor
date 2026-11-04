@@ -7,6 +7,7 @@ export type CampaignSummary = {
 /** UI-facing persistence boundary. No browser API leaks into the rules. */
 export interface CampaignStore {
   list(): CampaignSummary[];
+  all(): GameState[];
   load(id: string): GameState | null;
   save(state: GameState): void;
   remove(id: string): void;
@@ -41,20 +42,27 @@ export function isGameState(value: unknown): value is GameState {
 }
 
 export class BrowserCampaignStore implements CampaignStore {
-  list(): CampaignSummary[] {
-    const result: CampaignSummary[] = [];
+  private entries(): Envelope[] {
+    const result: Envelope[] = [];
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i);
       if (!key?.startsWith(PREFIX)) continue;
       try {
         const envelope: Envelope = JSON.parse(localStorage.getItem(key)!);
-        if (!isGameState(envelope.state) || typeof envelope.updatedAt !== 'string') continue;
-        const s=envelope.state;
-        result.push({ id:s.id, country:s.countries[0].name, round:s.round, territories:owned(s,HUMAN_ID).length, updatedAt:envelope.updatedAt, finished:s.phase==='finished'||owned(s,HUMAN_ID).length===0 });
-      } catch { /* Ignore an unrelated or damaged save; never break the other campaigns. */ }
+        if (!isGameState(envelope.state) || typeof envelope.updatedAt !== 'string' || key !== PREFIX+envelope.state.id) continue;
+        result.push(envelope);
+      } catch { /* Ignore damaged saves without hiding the other campaigns. */ }
     }
     return result.sort((a,b)=>b.updatedAt.localeCompare(a.updatedAt));
   }
+  list(): CampaignSummary[] {
+    return this.entries().map(({ state:s, updatedAt })=>({
+      id:s.id, country:s.countries[0].name, round:s.round,
+      territories:owned(s,HUMAN_ID).length, updatedAt,
+      finished:s.phase==='finished'||owned(s,HUMAN_ID).length===0,
+    }));
+  }
+  all(): GameState[] { return this.entries().map(entry=>entry.state); }
   load(id: string): GameState | null {
     const raw=localStorage.getItem(PREFIX+id);
     if (!raw) return null;
