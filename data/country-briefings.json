@@ -1,0 +1,1367 @@
+{
+  "af": {
+    "region": "Asia",
+    "capital": "Kabul",
+    "overview": "A rugged landlocked nation known as the \"graveyard of empires.\" It has been at war almost continuously since 1979.",
+    "wars": "Anglo-Afghan Wars (1839–1919); Soviet–Afghan War (1979–89); Civil War (1992–96); US-led war (2001–21)",
+    "notable": "The Taliban retook power in August 2021 after the US withdrawal."
+  },
+  "al": {
+    "region": "Europe",
+    "capital": "Tirana",
+    "overview": "A Balkan nation that spent decades under the isolated communist rule of Enver Hoxha. It joined NATO in 2009.",
+    "wars": "Italian invasion (1939); World War II resistance; Kosovo War spillover (1999)",
+    "notable": "Dotted with hundreds of thousands of Cold War bunkers."
+  },
+  "dz": {
+    "region": "Africa",
+    "capital": "Algiers",
+    "overview": "Africa's largest country by area. It won independence from France in 1962 after a brutal eight-year war, then endured a bloody civil war in the 1990s.",
+    "wars": "Algerian War of Independence (1954–62); Sand War with Morocco (1963); Algerian Civil War (1991–2002)",
+    "notable": "Hosts huge Saharan oil and gas fields; the FLN became a model for anti-colonial movements."
+  },
+  "ad": {
+    "region": "Europe",
+    "capital": "Andorra la Vella",
+    "overview": "A tiny Pyrenean co-principality between France and Spain.",
+    "wars": "No modern wars",
+    "notable": "Famous for the myth of its \"war on Germany\" that supposedly lasted until 1958."
+  },
+  "ao": {
+    "region": "Africa",
+    "capital": "Luanda",
+    "overview": "A former Portuguese colony that became independent in 1975 and was instantly split by a Cold War proxy civil war lasting until 2002.",
+    "wars": "War of Independence (1961–74); Civil War (1975–2002); interventions in Congo",
+    "notable": "Cuban and South African troops fought large battles here; now a major oil producer."
+  },
+  "ag": {
+    "region": "Americas",
+    "capital": "Saint John's",
+    "overview": "A twin-island Caribbean nation, independent from Britain since 1981. It has no major war history.",
+    "wars": "No major wars",
+    "notable": "Nelson's Dockyard was a major Royal Navy base."
+  },
+  "ar": {
+    "region": "Americas",
+    "capital": "Buenos Aires",
+    "overview": "South America's second-largest country by area, shaped by Spanish rule, European immigration and military dictatorships.",
+    "wars": "Independence Wars (1810–18); War of the Triple Alliance (1864–70); Falklands War (1982)",
+    "notable": "The 1982 loss to Britain helped topple the military junta."
+  },
+  "am": {
+    "region": "Middle East and Caucasus",
+    "capital": "Yerevan",
+    "overview": "An ancient Caucasus nation and the first state to adopt Christianity (301 AD). It has fought repeated wars with Azerbaijan.",
+    "wars": "First Nagorno-Karabakh War (1988–94); Second (2020); 2023 Azerbaijani offensive",
+    "notable": "Lost control of Nagorno-Karabakh in 2023."
+  },
+  "au": {
+    "region": "Oceania",
+    "capital": "Canberra",
+    "overview": "A continent-sized nation that has fought alongside Britain and the US in nearly every major conflict.",
+    "wars": "World Wars I and II; Korean War; Vietnam War; Gulf War; Afghanistan (2001–21); Iraq",
+    "notable": "The Gallipoli landing in 1915 is a defining national moment."
+  },
+  "at": {
+    "region": "Europe",
+    "capital": "Vienna",
+    "overview": "The heart of the Habsburg Empire, once one of Europe's great powers. Now a neutral republic.",
+    "wars": "War of the Spanish Succession (1701–14); Napoleonic Wars; Austro-Prussian War (1866); World War I (1914–18)",
+    "notable": "The assassination of Archduke Franz Ferdinand sparked WWI."
+  },
+  "az": {
+    "region": "Middle East and Caucasus",
+    "capital": "Baku",
+    "overview": "A Caspian oil nation that retook Nagorno-Karabakh in 2020 and 2023.",
+    "wars": "First Nagorno-Karabakh War (1988–94); Second (2020); 2023 offensive",
+    "notable": "Oil boom began in Baku in the 1800s."
+  },
+  "bs": {
+    "region": "Americas",
+    "capital": "Nassau",
+    "overview": "A Caribbean archipelago, independent from Britain since 1973.",
+    "wars": "No major wars",
+    "notable": "Once a haven for pirates."
+  },
+  "bh": {
+    "region": "Middle East and Caucasus",
+    "capital": "Manama",
+    "overview": "A small island monarchy in the Persian Gulf hosting the US Fifth Fleet.",
+    "wars": "1981 and 1996 coup plots; 2011 uprising",
+    "notable": "Led the Gulf's pearl trade historically."
+  },
+  "bd": {
+    "region": "Asia",
+    "capital": "Dhaka",
+    "overview": "A densely populated delta nation that broke away from Pakistan in 1971.",
+    "wars": "Bangladesh Liberation War (1971)",
+    "notable": "Born from a war in which millions fled to India."
+  },
+  "bb": {
+    "region": "Americas",
+    "capital": "Bridgetown",
+    "overview": "A small, stable Caribbean island nation. It became a republic in 2021.",
+    "wars": "No major wars",
+    "notable": "Former sugar colony; birthplace of Rihanna."
+  },
+  "by": {
+    "region": "Europe",
+    "capital": "Minsk",
+    "overview": "A former Soviet republic and close ally of Russia, ruled by Alexander Lukashenko since 1994.",
+    "wars": "World War II (about a quarter of the population died); allowed Russian forces to stage the 2022 invasion of Ukraine",
+    "notable": "Hosts Russian forces and Russian tactical nuclear weapons."
+  },
+  "be": {
+    "region": "Europe",
+    "capital": "Brussels",
+    "overview": "A small but strategic nation twice overrun by Germany in the 20th century. It hosts the EU and NATO headquarters.",
+    "wars": "Belgian Revolution (1830); World Wars I and II; Congo wars (colonial)",
+    "notable": "Occupied in 1914 and 1940; King Leopold's Congo brutality is a dark legacy."
+  },
+  "bz": {
+    "region": "Americas",
+    "capital": "Belmopan",
+    "overview": "Central America's only English-speaking nation, formerly British Honduras.",
+    "wars": "Guatemalan territorial dispute (ongoing)",
+    "notable": "Home to the world's second-largest barrier reef."
+  },
+  "bj": {
+    "region": "Africa",
+    "capital": "Porto-Novo",
+    "overview": "Home of the old Dahomey kingdom, famed for its elite female warriors. A French colony until 1960.",
+    "wars": "Franco-Dahomean Wars (1890–94)",
+    "notable": "First African state to peacefully abandon Marxism-Leninism (1990)."
+  },
+  "bt": {
+    "region": "Asia",
+    "capital": "Thimphu",
+    "overview": "A small Himalayan kingdom that has largely avoided wars.",
+    "wars": "Duar War with Britain (1864–65); Operation All Clear against Indian militants (2003)",
+    "notable": "Measures national success by \"Gross National Happiness.\""
+  },
+  "bo": {
+    "region": "Americas",
+    "capital": "Sucre / La Paz",
+    "overview": "A landlocked Andean nation that lost its coastline in a war with Chile.",
+    "wars": "War of the Pacific (1879–84); Chaco War (1932–35)",
+    "notable": "Lost its Pacific coast to Chile, which it still disputes."
+  },
+  "ba": {
+    "region": "Europe",
+    "capital": "Sarajevo",
+    "overview": "A Balkan nation of Bosniaks, Serbs and Croats, torn apart by war after Yugoslavia broke up.",
+    "wars": "Bosnian War (1992–95)",
+    "notable": "The Srebrenica massacre (1995) killed over 8,000."
+  },
+  "bw": {
+    "region": "Africa",
+    "capital": "Gaborone",
+    "overview": "A stable, diamond-rich democracy since independence from Britain in 1966. It has avoided major wars.",
+    "wars": "No major wars; border incursions during the Rhodesian and apartheid eras",
+    "notable": "One of Africa's longest-running multiparty democracies."
+  },
+  "br": {
+    "region": "Americas",
+    "capital": "Brasília",
+    "overview": "South America's giant and the world's fifth-largest country by population and area.",
+    "wars": "War of the Triple Alliance (1864–70); World Wars I and II (fought in Italy)",
+    "notable": "The only South American nation to send troops to WWII combat."
+  },
+  "bn": {
+    "region": "Asia",
+    "capital": "Bandar Seri Begawan",
+    "overview": "A tiny, oil-rich sultanate on Borneo, once a great regional power.",
+    "wars": "Brunei Revolt (1962)",
+    "notable": "One of the world's wealthiest nations per capita."
+  },
+  "bg": {
+    "region": "Europe",
+    "capital": "Sofia",
+    "overview": "A Balkan nation that has fought several wars to gain territory.",
+    "wars": "Balkan Wars (1912–13); World Wars I and II",
+    "notable": "Fought on the losing side in both world wars."
+  },
+  "bf": {
+    "region": "Africa",
+    "capital": "Ouagadougou",
+    "overview": "A landlocked Sahel state that has seen repeated coups. It now faces a serious jihadist insurgency.",
+    "wars": "Agacher Strip War with Mali (1974, 1985); jihadist insurgency (2015–)",
+    "notable": "Thomas Sankara's radical revolution (1983–87); several coups since 2014."
+  },
+  "bi": {
+    "region": "Africa",
+    "capital": "Gitega",
+    "overview": "A small Central African state scarred by Hutu–Tutsi ethnic violence since independence in 1962.",
+    "wars": "Civil War (1993–2005); 1972 and 1993 ethnic massacres",
+    "notable": "Peace agreements in 2000 and 2005 ended the worst of the fighting."
+  },
+  "cv": {
+    "region": "Africa",
+    "capital": "Praia",
+    "overview": "An Atlantic island nation that won independence from Portugal in 1975 and has been peaceful since.",
+    "wars": "Part of the PAIGC liberation struggle (1963–74)",
+    "notable": "A stable democracy that was once a hub of the Atlantic slave trade."
+  },
+  "kh": {
+    "region": "Asia",
+    "capital": "Phnom Penh",
+    "overview": "Heart of the Khmer Empire that built Angkor Wat. It endured one of the 20th century's worst genocides.",
+    "wars": "Cambodian Civil War (1967–75); Khmer Rouge genocide (1975–79); Cambodian–Vietnamese War (1977–91)",
+    "notable": "The Khmer Rouge killed about a quarter of the population."
+  },
+  "cm": {
+    "region": "Africa",
+    "capital": "Yaoundé",
+    "overview": "A former German, then British and French, colony. It now faces separatist and jihadist violence.",
+    "wars": "Bakassi border dispute with Nigeria (1990s); Boko Haram conflict (2014–); Anglophone Crisis (2017–)",
+    "notable": "The only African state with both British and French colonial legacies."
+  },
+  "ca": {
+    "region": "Americas",
+    "capital": "Ottawa",
+    "overview": "The world's second-largest country by area, with a small but professional military.",
+    "wars": "War of 1812; World Wars I and II; Korean War; Gulf War; Afghanistan (2001–14)",
+    "notable": "The Battle of Vimy Ridge (1917) is a defining national moment."
+  },
+  "cf": {
+    "region": "Africa",
+    "capital": "Bangui",
+    "overview": "A resource-rich but extremely poor country gripped by repeated coups and civil wars.",
+    "wars": "Bush War (2004–07); Civil War (2012–)",
+    "notable": "Hosts UN peacekeepers and foreign mercenary forces."
+  },
+  "td": {
+    "region": "Africa",
+    "capital": "N'Djamena",
+    "overview": "A vast Sahel country that has known near-constant rebellion since independence from France in 1960.",
+    "wars": "Chadian–Libyan conflict (1978–87); civil wars; Boko Haram conflict",
+    "notable": "Won the 1987 \"Toyota War,\" routing Libya's army with armed pickup trucks."
+  },
+  "cl": {
+    "region": "Americas",
+    "capital": "Santiago",
+    "overview": "A long, narrow Andean country that won major territory in the War of the Pacific.",
+    "wars": "War of the Pacific (1879–84); Independence Wars",
+    "notable": "Pinochet's 1973 coup began a 17-year dictatorship."
+  },
+  "cn": {
+    "region": "Asia",
+    "capital": "Beijing",
+    "overview": "An ancient civilisation that rose from civil war and foreign occupation. It has the largest army by personnel.",
+    "wars": "Opium Wars (1839–60); Sino-Japanese Wars (1894–95, 1937–45); Civil War (1927–49); Korean War (1950–53); Sino-Indian War (1962); Sino-Vietnamese War (1979)",
+    "notable": "Invented gunpowder, paper and the compass; tested nuclear weapons from 1964."
+  },
+  "co": {
+    "region": "Americas",
+    "capital": "Bogotá",
+    "overview": "A South American nation riven by decades of guerrilla and drug-cartel violence.",
+    "wars": "La Violencia (1948–58); conflict with FARC and ELN (1964–2016); Korean War",
+    "notable": "The 2016 peace deal ended the war with FARC."
+  },
+  "km": {
+    "region": "Africa",
+    "capital": "Moroni",
+    "overview": "A small island nation off Mozambique, independent from France since 1975 and notorious for coups.",
+    "wars": "No major wars; around 20 coups or attempts since 1975",
+    "notable": "Mercenary Bob Denard staged several coups here."
+  },
+  "cg": {
+    "region": "Africa",
+    "capital": "Brazzaville",
+    "overview": "A French-colonial oil state that suffered civil wars in the 1990s.",
+    "wars": "Civil Wars (1993–94, 1997–99)",
+    "notable": "Known as Congo-Brazzaville to separate it from its giant neighbour."
+  },
+  "cr": {
+    "region": "Americas",
+    "capital": "San José",
+    "overview": "A peaceful Central American democracy that abolished its army in 1948.",
+    "wars": "Costa Rican Civil War (1948); no standing army since",
+    "notable": "Rare example of a nation with no military."
+  },
+  "ci": {
+    "region": "Africa",
+    "capital": "Yamoussoukro",
+    "overview": "Once West Africa's stable showcase economy, then split by civil war.",
+    "wars": "First Ivorian Civil War (2002–07); Second (2010–11)",
+    "notable": "World's largest cocoa producer."
+  },
+  "hr": {
+    "region": "Europe",
+    "capital": "Zagreb",
+    "overview": "A Balkan country on the Adriatic that won independence from Yugoslavia in 1991.",
+    "wars": "Croatian War of Independence (1991–95); World War II",
+    "notable": "Joined the EU in 2013."
+  },
+  "cu": {
+    "region": "Americas",
+    "capital": "Havana",
+    "overview": "A Caribbean island ruled by a communist government since the 1959 revolution.",
+    "wars": "Cuban War of Independence (1895–98); Revolution (1953–59); Bay of Pigs (1961); Angolan intervention (1975–91)",
+    "notable": "The 1962 Cuban Missile Crisis nearly caused nuclear war."
+  },
+  "cy": {
+    "region": "Middle East and Caucasus",
+    "capital": "Nicosia",
+    "overview": "An island divided since the 1974 Turkish invasion.",
+    "wars": "Turkish invasion (1974)",
+    "notable": "The UN Green Line splits the capital."
+  },
+  "cz": {
+    "region": "Europe",
+    "capital": "Prague",
+    "overview": "A Central European nation formed from Bohemia and Moravia. It was occupied twice in the 20th century.",
+    "wars": "Thirty Years' War (began in Prague, 1618); World Wars I and II; Soviet invasion (1968)",
+    "notable": "The Prague Defenestration of 1618 helped start the Thirty Years' War."
+  },
+  "cd": {
+    "region": "Africa",
+    "capital": "Kinshasa",
+    "overview": "A giant, mineral-rich state ravaged by the deadliest conflict since World War II.",
+    "wars": "Congo Crisis (1960–65); First Congo War (1996–97); Second Congo War (1998–2003); M23 conflict in the east (2012–)",
+    "notable": "The Second Congo War drew in nine nations and killed millions."
+  },
+  "dk": {
+    "region": "Europe",
+    "capital": "Copenhagen",
+    "overview": "A small Scandinavian kingdom whose Vikings once raided much of Europe.",
+    "wars": "Viking conquests; Napoleonic Wars; Second Schleswig War (1864); WWII occupation (1940–45); Gulf, Iraq, Afghanistan",
+    "notable": "Lost to Prussia in 1864 and was occupied by Germany in 1940."
+  },
+  "dj": {
+    "region": "Africa",
+    "capital": "Djibouti",
+    "overview": "A tiny Horn of Africa state on the Red Sea chokepoint. It hosts bases of the US, France, China and others.",
+    "wars": "Civil War (1991–94); border clash with Eritrea (2008)",
+    "notable": "Strategic location on the Bab-el-Mandeb strait."
+  },
+  "dm": {
+    "region": "Americas",
+    "capital": "Roseau",
+    "overview": "A mountainous Caribbean island nation, independent from Britain since 1978.",
+    "wars": "No major wars",
+    "notable": "Last Caribbean island colonised by Europeans, thanks to fierce Carib resistance."
+  },
+  "do": {
+    "region": "Americas",
+    "capital": "Santo Domingo",
+    "overview": "Shares Hispaniola with Haiti. It declared independence from Haiti in 1844.",
+    "wars": "War of Independence (1844); Restoration War (1863–65); US occupation (1916–24); Civil War (1965)",
+    "notable": "The 1965 civil war prompted US intervention."
+  },
+  "ec": {
+    "region": "Americas",
+    "capital": "Quito",
+    "overview": "An Andean country straddling the equator. Long border tensions with Peru.",
+    "wars": "Ecuadorian–Peruvian War (1941); Cenepa War (1995)",
+    "notable": "Lost a large share of its territory to Peru in 1941."
+  },
+  "eg": {
+    "region": "Africa",
+    "capital": "Cairo",
+    "overview": "An ancient civilisation of pharaohs and the most populous Arab state. It has fought Israel several times and made peace in 1979.",
+    "wars": "Arab–Israeli Wars (1948, 1956, 1967, 1973); North Yemen Civil War (1962–70); Libyan–Egyptian War (1977)",
+    "notable": "Controls the Suez Canal; first Arab state to recognise Israel (1979)."
+  },
+  "sv": {
+    "region": "Americas",
+    "capital": "San Salvador",
+    "overview": "A small Central American state, scarred by a bloody civil war and gang violence.",
+    "wars": "Football War with Honduras (1969); Civil War (1979–92)",
+    "notable": "A recent crackdown on gangs sharply cut murders."
+  },
+  "gq": {
+    "region": "Africa",
+    "capital": "Malabo",
+    "overview": "A small, oil-rich former Spanish colony ruled by the same family since 1979.",
+    "wars": "No major wars",
+    "notable": "Obiang's rule makes him one of the world's longest-serving leaders."
+  },
+  "er": {
+    "region": "Africa",
+    "capital": "Asmara",
+    "overview": "Won independence from Ethiopia after a thirty-year struggle. It remains a closed, heavily militarised state.",
+    "wars": "Eritrean War of Independence (1961–91); Eritrean–Ethiopian War (1998–2000); Tigray War (2020–22)",
+    "notable": "Mandatory, often indefinite, national service."
+  },
+  "ee": {
+    "region": "Europe",
+    "capital": "Tallinn",
+    "overview": "A small Baltic nation that regained independence from the Soviet Union in 1991.",
+    "wars": "Estonian War of Independence (1918–20); Soviet occupation (1940–91)",
+    "notable": "A leader in e-government and a NATO member since 2004."
+  },
+  "sz": {
+    "region": "Africa",
+    "capital": "Mbabane",
+    "overview": "One of the world's last absolute monarchies, surrounded by South Africa and Mozambique.",
+    "wars": "No major wars; never fully conquered",
+    "notable": "Formerly known as Swaziland."
+  },
+  "et": {
+    "region": "Africa",
+    "capital": "Addis Ababa",
+    "overview": "An ancient empire never colonised in the usual sense. It famously crushed an Italian invasion in 1896.",
+    "wars": "Battle of Adwa (1896); Italian invasion (1935–41); Ogaden War (1977–78); Eritrean wars; Tigray War (2020–22)",
+    "notable": "Home of the African Union headquarters; a symbol of resistance to colonialism."
+  },
+  "fj": {
+    "region": "Oceania",
+    "capital": "Suva",
+    "overview": "The largest Pacific island nation after Papua New Guinea, independent since 1970.",
+    "wars": "Coups (1987, 2000, 2006)",
+    "notable": "Has seen four coups since 1987."
+  },
+  "fi": {
+    "region": "Europe",
+    "capital": "Helsinki",
+    "overview": "A Nordic nation that held off the Soviet Union in the Winter War. It joined NATO in 2023.",
+    "wars": "Finnish Civil War (1918); Winter War (1939–40); Continuation War (1941–44); Lapland War (1944–45)",
+    "notable": "Heroic defense in the Winter War despite being heavily outnumbered."
+  },
+  "fr": {
+    "region": "Europe",
+    "capital": "Paris",
+    "overview": "From the guillotine of 1789 to Napoleon's conquest of Europe, France has risen and fallen in blood. It is a nuclear-armed power.",
+    "wars": "Hundred Years' War; Napoleonic Wars (1803–15); Franco-Prussian War (1870–71); World Wars I and II; Indochina (1946–54); Algeria (1954–62)",
+    "notable": "Napoleon redrew the map of Europe; built an independent nuclear deterrent in 1960."
+  },
+  "ga": {
+    "region": "Africa",
+    "capital": "Libreville",
+    "overview": "An oil-rich, forested nation ruled by one family for over fifty years until a 2023 coup.",
+    "wars": "No major wars",
+    "notable": "Among the richest African states per capita."
+  },
+  "gm": {
+    "region": "Africa",
+    "capital": "Banjul",
+    "overview": "A sliver of land surrounding the Gambia River, entirely enclosed by Senegal.",
+    "wars": "1981 coup attempt; regional intervention in 2017 to remove Jammeh",
+    "notable": "Peaceful transition after Yahya Jammeh's 22-year rule."
+  },
+  "ge": {
+    "region": "Middle East and Caucasus",
+    "capital": "Tbilisi",
+    "overview": "A Caucasus nation that lost control of two regions to Russian-backed separatists.",
+    "wars": "Georgian Civil War (1991–93); Abkhaz and South Ossetian wars; Russo-Georgian War (2008)",
+    "notable": "Russian troops remain in Abkhazia and South Ossetia."
+  },
+  "de": {
+    "region": "Europe",
+    "capital": "Berlin",
+    "overview": "Unified by Prussian iron in 1871, it dragged the world into two wars. Divided by the Cold War, reunified in 1990.",
+    "wars": "Franco-Prussian War (1870–71); World War I (1914–18); World War II (1939–45)",
+    "notable": "The Nazi regime murdered six million Jews in the Holocaust."
+  },
+  "gh": {
+    "region": "Africa",
+    "capital": "Accra",
+    "overview": "The first sub-Saharan colony to win independence, in 1957 under Kwame Nkrumah.",
+    "wars": "Anglo-Ashanti Wars (1824–1900)",
+    "notable": "A stable democracy and major gold and cocoa producer."
+  },
+  "gr": {
+    "region": "Europe",
+    "capital": "Athens",
+    "overview": "Birthplace of democracy and the ancient city-states of Athens and Sparta.",
+    "wars": "Persian Wars; Peloponnesian War; War of Independence (1821–29); Balkan Wars; Greco-Italian War (1940–41); Civil War (1946–49)",
+    "notable": "Resisted Italy and then Germany in WWII."
+  },
+  "gd": {
+    "region": "Americas",
+    "capital": "Saint George's",
+    "overview": "A small Caribbean island nation independent from Britain since 1974.",
+    "wars": "US invasion (1983)",
+    "notable": "The 1983 US-led invasion followed a Marxist coup."
+  },
+  "gt": {
+    "region": "Americas",
+    "capital": "Guatemala City",
+    "overview": "The largest Central American nation by population. A long civil war devastated its Mayan communities.",
+    "wars": "Civil War (1960–96)",
+    "notable": "The civil war left an estimated 200,000 dead."
+  },
+  "gn": {
+    "region": "Africa",
+    "capital": "Conakry",
+    "overview": "Rejected French rule in 1958. It has been dominated by strongmen and coups since.",
+    "wars": "Spillover from Sierra Leone and Liberian wars",
+    "notable": "Rich in bauxite and iron ore."
+  },
+  "gw": {
+    "region": "Africa",
+    "capital": "Bissau",
+    "overview": "A small West African state with a history of coups, drug trafficking and political instability.",
+    "wars": "War of Independence (1963–74); Civil War (1998–99)",
+    "notable": "Amílcar Cabral led the independence struggle."
+  },
+  "gy": {
+    "region": "Americas",
+    "capital": "Georgetown",
+    "overview": "South America's only English-speaking nation, now an oil boomtown.",
+    "wars": "Essequibo border dispute with Venezuela",
+    "notable": "Venezuela claims about two-thirds of its territory."
+  },
+  "ht": {
+    "region": "Americas",
+    "capital": "Port-au-Prince",
+    "overview": "The world's first Black republic, won by a slave revolt against France in 1804.",
+    "wars": "Haitian Revolution (1791–1804); US occupation (1915–34); gang insurgency (2020s)",
+    "notable": "Toussaint Louverture led the world's only successful slave revolution."
+  },
+  "va": {
+    "region": "Other and partially recognised",
+    "capital": "Vatican City",
+    "overview": "The world's smallest state and seat of the Catholic Church.",
+    "wars": "No modern wars; Swiss Guard has defended the Pope since 1506",
+    "notable": "Has been a UN observer state since 1964."
+  },
+  "hn": {
+    "region": "Americas",
+    "capital": "Tegucigalpa",
+    "overview": "A Central American nation that fought a short war with El Salvador over a football match.",
+    "wars": "Football War (1969); Contra War spillover (1980s)",
+    "notable": "US used Honduras as a base during the Cold War."
+  },
+  "hu": {
+    "region": "Europe",
+    "capital": "Budapest",
+    "overview": "Once a great power in the Austro-Hungarian Empire. It lost two-thirds of its territory after WWI.",
+    "wars": "Mongol invasion (1241); Ottoman wars; World War I; World War II; Hungarian Revolution (1956)",
+    "notable": "The 1956 uprising against Soviet rule was crushed by tanks."
+  },
+  "is": {
+    "region": "Europe",
+    "capital": "Reykjavík",
+    "overview": "A North Atlantic island nation with no army. It was settled by Vikings.",
+    "wars": "Cod Wars with Britain (1950s–1976)",
+    "notable": "The Cod Wars were fought with fishing boats and nets, not guns."
+  },
+  "in": {
+    "region": "Asia",
+    "capital": "New Delhi",
+    "overview": "Independent from Britain since 1947 and now the most populous nation on Earth. A nuclear power facing Pakistan and China.",
+    "wars": "Indo-Pakistani Wars (1947–48, 1965, 1971); Sino-Indian War (1962); Kargil War (1999)",
+    "notable": "Won independence through mass civil disobedience; tested nuclear devices in 1974 and 1998."
+  },
+  "id": {
+    "region": "Asia",
+    "capital": "Jakarta",
+    "overview": "The world's largest archipelago and most populous Muslim-majority nation.",
+    "wars": "Indonesian National Revolution (1945–49); Konfrontasi with Malaysia (1963–66); East Timor occupation (1975–99); Aceh insurgency (1976–2005)",
+    "notable": "Anti-communist purge of 1965–66 killed hundreds of thousands."
+  },
+  "ir": {
+    "region": "Middle East and Caucasus",
+    "capital": "Tehran",
+    "overview": "Heir to the ancient Persian Empire, transformed by the 1979 Islamic Revolution. It projects power through the Revolutionary Guard and allied militias.",
+    "wars": "Iran–Iraq War (1980–88); proxy conflicts across the region; missile exchanges with Israel (2024); 12-day war with Israel (2025)",
+    "notable": "Suffered chemical weapons attacks from Iraq."
+  },
+  "iq": {
+    "region": "Middle East and Caucasus",
+    "capital": "Baghdad",
+    "overview": "Land of ancient Mesopotamia and Babylon, fought over in modern times.",
+    "wars": "Iran–Iraq War (1980–88); Gulf War (1991); US invasion (2003–11); war against ISIS (2014–17)",
+    "notable": "Saddam Hussein was toppled in 2003."
+  },
+  "ie": {
+    "region": "Europe",
+    "capital": "Dublin",
+    "overview": "A republic that fought for centuries against English and British rule.",
+    "wars": "Nine Years' War (1594–1603); Irish Rebellion (1798); War of Independence (1919–21); Civil War (1922–23)",
+    "notable": "Neutral in World War II."
+  },
+  "il": {
+    "region": "Middle East and Caucasus",
+    "capital": "Jerusalem (disputed)",
+    "overview": "Founded in 1948 after the Holocaust, surrounded by hostile neighbours. It has a highly capable military and mandatory draft.",
+    "wars": "1948 War; Suez Crisis (1956); Six-Day War (1967); Yom Kippur War (1973); Lebanon Wars (1982, 2006); Gaza war (2023–)",
+    "notable": "Rescued hostages at Entebbe (1976); widely believed to hold undeclared nuclear weapons."
+  },
+  "it": {
+    "region": "Europe",
+    "capital": "Rome",
+    "overview": "Heir to the Roman Empire, unified only in 1861.",
+    "wars": "Roman conquests; Italian Wars of Independence; World Wars I and II; Italo-Turkish War (1911–12)",
+    "notable": "Mussolini's Fascist regime allied with Nazi Germany."
+  },
+  "jm": {
+    "region": "Americas",
+    "capital": "Kingston",
+    "overview": "A Caribbean island nation, independent from Britain since 1962.",
+    "wars": "No major wars; Maroon Wars (1730s, 1795)",
+    "notable": "Birthplace of reggae and Bob Marley."
+  },
+  "jp": {
+    "region": "Asia",
+    "capital": "Tokyo",
+    "overview": "A land of samurai that modernised in one generation and built an empire. It was crushed in 1945 and now keeps a pacifist constitution.",
+    "wars": "Sino-Japanese Wars (1894–95, 1937–45); Russo-Japanese War (1904–05); World War II (1941–45)",
+    "notable": "Hit by atomic bombs in 1945; Article 9 renounces war."
+  },
+  "jo": {
+    "region": "Middle East and Caucasus",
+    "capital": "Amman",
+    "overview": "A desert kingdom bordering Israel, Iraq, Syria and Saudi Arabia.",
+    "wars": "1948 War; Six-Day War (1967); Black September (1970)",
+    "notable": "Made peace with Israel in 1994."
+  },
+  "kz": {
+    "region": "Asia",
+    "capital": "Astana",
+    "overview": "The world's largest landlocked country, a former Soviet republic and nuclear-weapons renouncer.",
+    "wars": "No major wars; January 2022 unrest",
+    "notable": "Gave up the Soviet nuclear arsenal it inherited in the 1990s."
+  },
+  "ke": {
+    "region": "Africa",
+    "capital": "Nairobi",
+    "overview": "East Africa's economic hub, born from a brutal fight against British rule.",
+    "wars": "Mau Mau Uprising (1952–60); Shifta War (1963–67); war on al-Shabaab in Somalia (2011–)",
+    "notable": "Hosts a large Nairobi diplomatic and tech scene."
+  },
+  "ki": {
+    "region": "Oceania",
+    "capital": "Tarawa",
+    "overview": "A scatter of Pacific atolls straddling the equator and the date line.",
+    "wars": "Battle of Tarawa (1943)",
+    "notable": "One of the nations most threatened by sea-level rise."
+  },
+  "kw": {
+    "region": "Middle East and Caucasus",
+    "capital": "Kuwait City",
+    "overview": "A small oil-rich emirate invaded by Iraq in 1990.",
+    "wars": "Iraqi invasion (1990); Gulf War (1991)",
+    "notable": "Liberated by a US-led coalition."
+  },
+  "kg": {
+    "region": "Asia",
+    "capital": "Bishkek",
+    "overview": "A mountainous Central Asian republic that has seen two revolutions since 2000.",
+    "wars": "Tulip Revolution (2005); ethnic clashes (2010); border war with Tajikistan (2021–22)",
+    "notable": "Hosts a Russian military base."
+  },
+  "la": {
+    "region": "Asia",
+    "capital": "Vientiane",
+    "overview": "A landlocked communist state and the most heavily bombed country per capita in history.",
+    "wars": "Laotian Civil War (1959–75); Vietnam War spillover",
+    "notable": "The US dropped more bombs on Laos than it did on Germany and Japan combined in WWII."
+  },
+  "lv": {
+    "region": "Europe",
+    "capital": "Riga",
+    "overview": "A Baltic nation that regained independence from the Soviet Union in 1991.",
+    "wars": "Latvian War of Independence (1918–20); WWII occupation",
+    "notable": "Joined NATO and the EU in 2004."
+  },
+  "lb": {
+    "region": "Middle East and Caucasus",
+    "capital": "Beirut",
+    "overview": "A Mediterranean nation of many faiths, shattered by civil war.",
+    "wars": "Lebanese Civil War (1975–90); Israeli invasions (1982, 2006); 2024 Israel–Hezbollah war",
+    "notable": "The 2020 Beirut port explosion killed over 200."
+  },
+  "ls": {
+    "region": "Africa",
+    "capital": "Maseru",
+    "overview": "A mountain kingdom completely surrounded by South Africa.",
+    "wars": "Basotho Gun War (1880–81); SADC intervention (1998)",
+    "notable": "The Basotho kept their independence through diplomacy and mountain defence."
+  },
+  "lr": {
+    "region": "Africa",
+    "capital": "Monrovia",
+    "overview": "Founded by freed American slaves in 1847, it was torn apart by civil war.",
+    "wars": "First Liberian Civil War (1989–97); Second (1999–2003)",
+    "notable": "Charles Taylor was convicted of war crimes in 2012."
+  },
+  "ly": {
+    "region": "Africa",
+    "capital": "Tripoli",
+    "overview": "An oil-rich North African state that fell into chaos after Gaddafi was overthrown in 2011.",
+    "wars": "Italo-Turkish War (1911); Chadian–Libyan conflict (1978–87); Libyan Revolution (2011); Civil Wars (2014–20)",
+    "notable": "Responsible for the Lockerbie bombing (1988)."
+  },
+  "li": {
+    "region": "Europe",
+    "capital": "Vaduz",
+    "overview": "A tiny Alpine principality between Switzerland and Austria with no army.",
+    "wars": "No wars since 1866",
+    "notable": "Legend says its 80-man army returned from the 1866 war with 81 men."
+  },
+  "lt": {
+    "region": "Europe",
+    "capital": "Vilnius",
+    "overview": "A Baltic nation that was once a vast medieval empire.",
+    "wars": "Battle of Grunwald (1410); Lithuanian Wars of Independence (1918–20); Soviet occupation",
+    "notable": "Was the first Soviet republic to declare independence (1990)."
+  },
+  "lu": {
+    "region": "Europe",
+    "capital": "Luxembourg City",
+    "overview": "A small, wealthy grand duchy in Western Europe.",
+    "wars": "Occupied in World Wars I and II",
+    "notable": "Founding member of the EU and NATO."
+  },
+  "mg": {
+    "region": "Africa",
+    "capital": "Antananarivo",
+    "overview": "A huge island nation with unique wildlife and a history of French colonial rule.",
+    "wars": "Franco-Hova Wars (1883–96); Malagasy Uprising (1947–48)",
+    "notable": "Home to species found nowhere else on Earth."
+  },
+  "mw": {
+    "region": "Africa",
+    "capital": "Lilongwe",
+    "overview": "A landlocked, densely populated nation on a great African lake.",
+    "wars": "No major wars; Chilembwe uprising (1915)",
+    "notable": "Sometimes called \"the warm heart of Africa.\""
+  },
+  "my": {
+    "region": "Asia",
+    "capital": "Kuala Lumpur",
+    "overview": "A multi-ethnic federation in Southeast Asia, formed in 1963.",
+    "wars": "Malayan Emergency (1948–60); Konfrontasi with Indonesia (1963–66)",
+    "notable": "The Malayan Emergency defeated a communist insurgency."
+  },
+  "mv": {
+    "region": "Asia",
+    "capital": "Malé",
+    "overview": "A low-lying island chain in the Indian Ocean, independent from Britain since 1965.",
+    "wars": "1988 coup attempt (repelled with Indian help)",
+    "notable": "Among the countries most threatened by sea-level rise."
+  },
+  "ml": {
+    "region": "Africa",
+    "capital": "Bamako",
+    "overview": "Heart of the medieval Mali Empire, now battling jihadists and rebels in its north.",
+    "wars": "Tuareg rebellions (1962–64, 1990s, 2012); jihadist insurgency (2012–); Agacher Strip War (1974, 1985)",
+    "notable": "Mansa Musa of Mali was among the richest people in history."
+  },
+  "mt": {
+    "region": "Europe",
+    "capital": "Valletta",
+    "overview": "A Mediterranean island nation, long a strategic naval fortress.",
+    "wars": "Great Siege of Malta (1565); Siege of Malta (1940–42)",
+    "notable": "Awarded the George Cross for its WWII heroism."
+  },
+  "mh": {
+    "region": "Oceania",
+    "capital": "Majuro",
+    "overview": "A Pacific atoll nation used for US nuclear tests.",
+    "wars": "WWII Pacific campaign; US nuclear tests (1946–58)",
+    "notable": "Bikini Atoll hosted 23 nuclear tests."
+  },
+  "mr": {
+    "region": "Africa",
+    "capital": "Nouakchott",
+    "overview": "A Saharan state straddling Arab and sub-Saharan Africa.",
+    "wars": "Western Sahara War (1975–79); Senegal border conflict (1989)",
+    "notable": "Last country in the world to abolish slavery (1981, criminalised 2007)."
+  },
+  "mu": {
+    "region": "Africa",
+    "capital": "Port Louis",
+    "overview": "An Indian Ocean island fought over by the French and British.",
+    "wars": "Battle of Grand Port (1810); no major wars since independence in 1968",
+    "notable": "A stable democracy and tourism hub."
+  },
+  "mx": {
+    "region": "Americas",
+    "capital": "Mexico City",
+    "overview": "Heir to the Aztec empire and Spain's richest colony. It lost half its territory to the United States.",
+    "wars": "Independence War (1810–21); Mexican–American War (1846–48); French intervention (1861–67); Revolution (1910–20); cartel war (2006–)",
+    "notable": "Lost California, Nevada, Utah and much more in the 1848 treaty."
+  },
+  "fm": {
+    "region": "Oceania",
+    "capital": "Palikir",
+    "overview": "A scattering of Pacific islands in free association with the US.",
+    "wars": "WWII Pacific campaign (Chuuk Lagoon)",
+    "notable": "Chuuk Lagoon holds a graveyard of Japanese warships."
+  },
+  "md": {
+    "region": "Europe",
+    "capital": "Chișinău",
+    "overview": "A small former Soviet republic with a breakaway region, Transnistria.",
+    "wars": "Transnistria War (1992)",
+    "notable": "Russian troops remain in Transnistria."
+  },
+  "mc": {
+    "region": "Europe",
+    "capital": "Monaco",
+    "overview": "A tiny Mediterranean principality known for wealth and the Grand Prix.",
+    "wars": "No modern wars",
+    "notable": "Second-smallest country in the world."
+  },
+  "mn": {
+    "region": "Asia",
+    "capital": "Ulaanbaatar",
+    "overview": "Birthplace of Genghis Khan's empire, the largest contiguous land empire in history.",
+    "wars": "Mongol conquests (1200s); Khalkhin Gol (1939)",
+    "notable": "Sits between China and Russia."
+  },
+  "me": {
+    "region": "Europe",
+    "capital": "Podgorica",
+    "overview": "A Balkan nation that regained independence from Serbia in 2006.",
+    "wars": "Balkan Wars (1912–13); World War I; Yugoslav Wars (1990s)",
+    "notable": "Joined NATO in 2017."
+  },
+  "ma": {
+    "region": "Africa",
+    "capital": "Rabat",
+    "overview": "An old kingdom that was a French and Spanish protectorate until 1956.",
+    "wars": "Rif War (1921–26); Sand War (1963); Western Sahara War (1975–91)",
+    "notable": "Controls most of the disputed Western Sahara."
+  },
+  "mz": {
+    "region": "Africa",
+    "capital": "Maputo",
+    "overview": "Portuguese colony that gained independence in 1975 and then suffered a long civil war.",
+    "wars": "War of Independence (1964–74); Civil War (1977–92); Cabo Delgado insurgency (2017–)",
+    "notable": "Rich in natural gas offshore."
+  },
+  "mm": {
+    "region": "Asia",
+    "capital": "Naypyidaw",
+    "overview": "A former British colony in Southeast Asia, ruled by the military for most of its modern history.",
+    "wars": "Anglo-Burmese Wars (1824–85); Civil War (1948–); Rohingya crisis (2017); post-coup war (2021–)",
+    "notable": "The world's longest-running civil conflict."
+  },
+  "na": {
+    "region": "Africa",
+    "capital": "Windhoek",
+    "overview": "Former German colony and later South African-ruled territory. It became independent in 1990.",
+    "wars": "Herero and Nama genocide (1904–08); Independence struggle (1966–90)",
+    "notable": "Germany has formally acknowledged the genocide."
+  },
+  "nr": {
+    "region": "Oceania",
+    "capital": "Yaren",
+    "overview": "The world's smallest island nation, once enriched by phosphate mining.",
+    "wars": "WWII Japanese occupation",
+    "notable": "Smallest republic in the world."
+  },
+  "np": {
+    "region": "Asia",
+    "capital": "Kathmandu",
+    "overview": "A Himalayan nation home to Mount Everest, never colonised by Britain.",
+    "wars": "Anglo-Nepalese War (1814–16); Civil War (1996–2006)",
+    "notable": "Gurkha soldiers serve in the British and Indian armies."
+  },
+  "nl": {
+    "region": "Europe",
+    "capital": "Amsterdam",
+    "overview": "A low-lying seafaring nation that built a global trading empire.",
+    "wars": "Eighty Years' War (1568–1648); Anglo-Dutch Wars; Napoleonic Wars; WWII occupation; Indonesian independence war",
+    "notable": "Dutch Golden Age made it a major world power."
+  },
+  "nz": {
+    "region": "Oceania",
+    "capital": "Wellington",
+    "overview": "A Pacific nation that has fought in both World Wars as a loyal ally of Britain.",
+    "wars": "New Zealand Wars (1845–72); World Wars I and II; Korean War; Vietnam War",
+    "notable": "The ANZAC legend was born at Gallipoli in 1915."
+  },
+  "ni": {
+    "region": "Americas",
+    "capital": "Managua",
+    "overview": "A Central American nation shaped by US interventions and the Sandinista revolution.",
+    "wars": "US occupation (1912–33); Revolution (1978–79); Contra War (1981–90)",
+    "notable": "Sandinistas toppled the Somoza dictatorship in 1979."
+  },
+  "ne": {
+    "region": "Africa",
+    "capital": "Niamey",
+    "overview": "A vast Sahel country that is one of the poorest on Earth. It was taken over by the military in 2023.",
+    "wars": "Tuareg rebellions; jihadist insurgency (2015–)",
+    "notable": "Major uranium producer."
+  },
+  "ng": {
+    "region": "Africa",
+    "capital": "Abuja",
+    "overview": "Africa's most populous nation and largest economy.",
+    "wars": "Biafran War (1967–70); Boko Haram insurgency (2009–); ECOWAS interventions in Liberia and Sierra Leone",
+    "notable": "The Biafran War killed up to a million or more."
+  },
+  "kp": {
+    "region": "Asia",
+    "capital": "Pyongyang",
+    "overview": "A hermit state ruled by the Kim dynasty since 1948. It is technically still at war with the South.",
+    "wars": "Korean War (1950–53; armistice only); Pueblo seizure (1968); reported troops to aid Russia (2024–)",
+    "notable": "Has tested nuclear weapons since 2006."
+  },
+  "mk": {
+    "region": "Europe",
+    "capital": "Skopje",
+    "overview": "A Balkan nation that gained independence from Yugoslavia in 1991.",
+    "wars": "Insurgency (2001)",
+    "notable": "Joined NATO in 2020."
+  },
+  "no": {
+    "region": "Europe",
+    "capital": "Oslo",
+    "overview": "A Nordic kingdom whose Vikings explored the North Atlantic.",
+    "wars": "Viking conquests; WWII invasion (1940); Gulf and Afghan deployments",
+    "notable": "Norwegian resistance sabotaged the Nazi heavy-water plant."
+  },
+  "om": {
+    "region": "Middle East and Caucasus",
+    "capital": "Muscat",
+    "overview": "A historic seafaring sultanate on the Arabian Sea.",
+    "wars": "Dhofar Rebellion (1962–76)",
+    "notable": "Known for neutrality and mediation in regional disputes."
+  },
+  "pk": {
+    "region": "Asia",
+    "capital": "Islamabad",
+    "overview": "Carved out of British India in 1947 and locked in rivalry with India ever since. A nuclear-armed state.",
+    "wars": "Indo-Pakistani Wars (1947–48, 1965, 1971); Kargil War (1999); insurgency on Afghan border (2001–)",
+    "notable": "Lost East Pakistan (now Bangladesh) in 1971; became a nuclear power in 1998."
+  },
+  "pw": {
+    "region": "Oceania",
+    "capital": "Ngerulmud",
+    "overview": "A tiny Pacific nation with an ancient culture.",
+    "wars": "Battle of Peleliu (1944)",
+    "notable": "One of the bloodiest Pacific WWII battles took place here."
+  },
+  "ps": {
+    "region": "Other and partially recognised",
+    "capital": "Ramallah (administrative), Jerusalem (claimed)",
+    "overview": "A territory comprising the West Bank and Gaza Strip, recognised as a state by many UN members.",
+    "wars": "Arab–Israeli Wars; First Intifada (1987–93); Second Intifada (2000–05); Gaza war (2023–)",
+    "notable": "A non-member observer state of the UN."
+  },
+  "pa": {
+    "region": "Americas",
+    "capital": "Panama City",
+    "overview": "Famed for the Panama Canal, finished by the US in 1914.",
+    "wars": "US invasion (1989)",
+    "notable": "The 1989 US invasion deposed Manuel Noriega."
+  },
+  "pg": {
+    "region": "Oceania",
+    "capital": "Port Moresby",
+    "overview": "A large Pacific nation with hundreds of languages.",
+    "wars": "Kokoda Track campaign (1942); Bougainville Civil War (1988–98)",
+    "notable": "Kokoda is a defining Australian WWII battle."
+  },
+  "py": {
+    "region": "Americas",
+    "capital": "Asunción",
+    "overview": "A landlocked nation that was nearly destroyed in the nineteenth century.",
+    "wars": "War of the Triple Alliance (1864–70); Chaco War (1932–35)",
+    "notable": "Lost most of its adult male population in the Triple Alliance War."
+  },
+  "pe": {
+    "region": "Americas",
+    "capital": "Lima",
+    "overview": "Heart of the Inca Empire, later Spain's main South American colony.",
+    "wars": "War of the Pacific (1879–84); Ecuadorian–Peruvian wars (1941, 1995); Shining Path insurgency (1980–2000)",
+    "notable": "Shining Path's insurgency killed about 70,000 people."
+  },
+  "ph": {
+    "region": "Asia",
+    "capital": "Manila",
+    "overview": "A Southeast Asian archipelago colonised by Spain, then the US, then occupied by Japan.",
+    "wars": "Philippine Revolution (1896–98); Philippine–American War (1899–1902); World War II; Moro insurgency (1969–2014)",
+    "notable": "Battle of Manila (1945) devastated the capital."
+  },
+  "pl": {
+    "region": "Europe",
+    "capital": "Warsaw",
+    "overview": "A Central European nation repeatedly partitioned and invaded. It was the first victim of WWII.",
+    "wars": "Polish–Soviet War (1919–21); German invasion (1939); Warsaw Uprising (1944)",
+    "notable": "Lost about six million citizens in World War II."
+  },
+  "pt": {
+    "region": "Europe",
+    "capital": "Lisbon",
+    "overview": "A small seafaring nation that pioneered European exploration. It built a global empire.",
+    "wars": "Age of Discovery; Peninsular War; Colonial Wars (1961–74); World War I",
+    "notable": "The 1974 Carnation Revolution ended a dictatorship and its colonial wars."
+  },
+  "qa": {
+    "region": "Middle East and Caucasus",
+    "capital": "Doha",
+    "overview": "A tiny gas-rich emirate with enormous wealth, hosting a major US air base.",
+    "wars": "Gulf War (1991); Gulf blockade (2017–21)",
+    "notable": "Hosted the 2022 FIFA World Cup."
+  },
+  "ro": {
+    "region": "Europe",
+    "capital": "Bucharest",
+    "overview": "A Balkan state with the legend of Vlad the Impaler.",
+    "wars": "World Wars I and II; Romanian Revolution (1989)",
+    "notable": "Overthrew dictator Ceaușescu in 1989."
+  },
+  "ru": {
+    "region": "Europe",
+    "capital": "Moscow",
+    "overview": "The largest country on Earth, heir to the Tsars and the Soviet Union. It holds the biggest nuclear arsenal.",
+    "wars": "Napoleon's invasion (1812); Civil War (1917–22); Great Patriotic War (1941–45); Soviet–Afghan War (1979–89); Chechen Wars; Georgia (2008); Ukraine (2014–)",
+    "notable": "Lost about 27 million Soviet citizens in WWII; launched Sputnik and Gagarin."
+  },
+  "rw": {
+    "region": "Africa",
+    "capital": "Kigali",
+    "overview": "A small, densely populated Central African nation, site of the 1994 genocide.",
+    "wars": "Rwandan Civil War (1990–94); 1994 genocide (about 800,000 killed); invasions of Congo (1996–)",
+    "notable": "Rebuilt rapidly under Paul Kagame's rule."
+  },
+  "kn": {
+    "region": "Americas",
+    "capital": "Basseterre",
+    "overview": "The smallest country in the Americas by area and population.",
+    "wars": "Battle of Saint Kitts (1782)",
+    "notable": "Brimstone Hill Fortress is a UNESCO site."
+  },
+  "lc": {
+    "region": "Americas",
+    "capital": "Castries",
+    "overview": "A volcanic Caribbean island that changed hands between Britain and France many times.",
+    "wars": "No major wars; contested by Britain and France (1600s–1814)",
+    "notable": "Changed hands 14 times."
+  },
+  "vc": {
+    "region": "Americas",
+    "capital": "Kingstown",
+    "overview": "A Caribbean island nation, independent since 1979.",
+    "wars": "Carib Wars (1700s)",
+    "notable": "Garifuna people, of African and Carib descent, resisted British rule here."
+  },
+  "ws": {
+    "region": "Oceania",
+    "capital": "Apia",
+    "overview": "A Polynesian island nation, independent since 1962 from New Zealand.",
+    "wars": "Samoan Civil Wars (1880s–1899)",
+    "notable": "First Polynesian nation to regain independence in the 20th century."
+  },
+  "sm": {
+    "region": "Europe",
+    "capital": "San Marino",
+    "overview": "The world's oldest surviving republic, enclaved in Italy.",
+    "wars": "No wars of note",
+    "notable": "Founded in 301 AD."
+  },
+  "st": {
+    "region": "Africa",
+    "capital": "São Tomé",
+    "overview": "A tiny two-island nation in the Gulf of Guinea, independent from Portugal since 1975.",
+    "wars": "No major wars",
+    "notable": "One of Africa's smallest countries."
+  },
+  "sa": {
+    "region": "Middle East and Caucasus",
+    "capital": "Riyadh",
+    "overview": "Home to Islam's holiest sites and the world's largest oil exporter.",
+    "wars": "Gulf War (1991); war in Yemen (2015–)",
+    "notable": "Founded in 1932 after Ibn Saud unified the Arabian peninsula."
+  },
+  "sn": {
+    "region": "Africa",
+    "capital": "Dakar",
+    "overview": "A relatively stable West African democracy and former French colonial hub.",
+    "wars": "Casamance conflict (1982–)",
+    "notable": "Dakar was the terminus of the Dakar Rally for years."
+  },
+  "rs": {
+    "region": "Europe",
+    "capital": "Belgrade",
+    "overview": "The core of the former Yugoslavia, repeatedly at war in the 1990s.",
+    "wars": "Balkan Wars (1912–13); World War I; Yugoslav Wars (1991–99); Kosovo War (1998–99)",
+    "notable": "Archduke Franz Ferdinand's assassin was Serbian."
+  },
+  "sc": {
+    "region": "Africa",
+    "capital": "Victoria",
+    "overview": "An Indian Ocean island nation, independent from Britain since 1976.",
+    "wars": "1981 mercenary coup attempt",
+    "notable": "Africa's smallest country by population."
+  },
+  "sl": {
+    "region": "Africa",
+    "capital": "Freetown",
+    "overview": "A West African state devastated by an 11-year civil war.",
+    "wars": "Civil War (1991–2002)",
+    "notable": "Notorious for \"blood diamonds\" and child soldiers."
+  },
+  "sg": {
+    "region": "Asia",
+    "capital": "Singapore",
+    "overview": "A wealthy island city-state that split from Malaysia in 1965.",
+    "wars": "Japanese occupation (1942–45); Konfrontasi spillover (1960s)",
+    "notable": "The fall of Singapore in 1942 was Britain's worst military defeat in Asia."
+  },
+  "sk": {
+    "region": "Europe",
+    "capital": "Bratislava",
+    "overview": "A Central European nation that split peacefully from Czechoslovakia in 1993.",
+    "wars": "World War II; Slovak National Uprising (1944)",
+    "notable": "The \"Velvet Divorce\" was bloodless."
+  },
+  "si": {
+    "region": "Europe",
+    "capital": "Ljubljana",
+    "overview": "The first Yugoslav republic to break away, in 1991.",
+    "wars": "Ten-Day War (1991)",
+    "notable": "Joined the EU in 2004."
+  },
+  "sb": {
+    "region": "Oceania",
+    "capital": "Honiara",
+    "overview": "A Melanesian island nation where some of WWII's fiercest fighting occurred.",
+    "wars": "Guadalcanal campaign (1942–43); Tensions (1998–2003)",
+    "notable": "Guadalcanal was a turning point in the Pacific War."
+  },
+  "so": {
+    "region": "Africa",
+    "capital": "Mogadishu",
+    "overview": "A Horn of Africa nation without a fully functioning central government since 1991.",
+    "wars": "Ogaden War (1977–78); Civil War (1991–); Battle of Mogadishu (1993); al-Shabaab insurgency (2006–)",
+    "notable": "The \"Black Hawk Down\" battle took place in Mogadishu."
+  },
+  "za": {
+    "region": "Africa",
+    "capital": "Pretoria",
+    "overview": "Africa's most industrialised nation, shaped by Zulu kings, Boer settlers and British imperialism. Apartheid ended in 1994.",
+    "wars": "Anglo-Zulu War (1879); Boer Wars (1880–81, 1899–1902); World Wars I and II; South African Border War (1966–90)",
+    "notable": "Developed nuclear weapons in secret, then dismantled them."
+  },
+  "kr": {
+    "region": "Asia",
+    "capital": "Seoul",
+    "overview": "Rebuilt from the ruins of the Korean War into an industrial giant. A conscript army guards the DMZ.",
+    "wars": "Korean War (1950–53); Vietnam War (about 300,000 troops); Yeonpyeong shelling (2010)",
+    "notable": "Hosts roughly 28,000 US troops."
+  },
+  "ss": {
+    "region": "Africa",
+    "capital": "Juba",
+    "overview": "The world's youngest nation, independent since 2011 and soon thrown into civil war.",
+    "wars": "Second Sudanese Civil War (1983–2005); South Sudanese Civil War (2013–20)",
+    "notable": "Has large oil reserves but severe poverty."
+  },
+  "es": {
+    "region": "Europe",
+    "capital": "Madrid",
+    "overview": "Once the greatest empire in the world, ruling vast territory in the Americas.",
+    "wars": "Reconquista; Spanish Armada (1588); Peninsular War (1808–14); Spanish–American War (1898); Spanish Civil War (1936–39)",
+    "notable": "The Civil War killed an estimated 500,000 people."
+  },
+  "lk": {
+    "region": "Asia",
+    "capital": "Colombo",
+    "overview": "An island nation off India, devastated by a 26-year civil war.",
+    "wars": "Sri Lankan Civil War (1983–2009)",
+    "notable": "The Tamil Tigers pioneered suicide-bombing tactics."
+  },
+  "sd": {
+    "region": "Africa",
+    "capital": "Khartoum",
+    "overview": "A vast northeast African nation shattered by decades of civil war.",
+    "wars": "Civil Wars (1955–72, 1983–2005); Darfur conflict (2003–); army–RSF war (2023–)",
+    "notable": "Split in two in 2011 when South Sudan seceded."
+  },
+  "sr": {
+    "region": "Americas",
+    "capital": "Paramaribo",
+    "overview": "A former Dutch colony on South America's north coast.",
+    "wars": "Maroon Wars (1700s); Interior War (1986–92)",
+    "notable": "Only Dutch-speaking nation in South America."
+  },
+  "se": {
+    "region": "Europe",
+    "capital": "Stockholm",
+    "overview": "A Nordic nation that was once a major European military power.",
+    "wars": "Thirty Years' War; Great Northern War (1700–21); Napoleonic Wars (last war, 1814)",
+    "notable": "Has stayed out of war since 1814."
+  },
+  "ch": {
+    "region": "Europe",
+    "capital": "Bern",
+    "overview": "A neutral Alpine nation that has avoided war for over two centuries.",
+    "wars": "Swiss–Austrian Wars (medieval); Sonderbund War (1847)",
+    "notable": "Last fought a war in 1847."
+  },
+  "sy": {
+    "region": "Middle East and Caucasus",
+    "capital": "Damascus",
+    "overview": "One of the world's oldest inhabited regions, wrecked by a civil war that began in 2011.",
+    "wars": "Arab–Israeli Wars (1948, 1967, 1973); Syrian Civil War (2011–)",
+    "notable": "The Assad regime fell in December 2024."
+  },
+  "tj": {
+    "region": "Asia",
+    "capital": "Dushanbe",
+    "overview": "A mountainous former Soviet republic in Central Asia.",
+    "wars": "Tajik Civil War (1992–97); border war with Kyrgyzstan (2021–22)",
+    "notable": "Over 90% of the country is mountainous."
+  },
+  "tz": {
+    "region": "Africa",
+    "capital": "Dodoma",
+    "overview": "Formed in 1964 by the union of Tanganyika and Zanzibar, led by Julius Nyerere.",
+    "wars": "Maji Maji Rebellion (1905–07); Uganda–Tanzania War (1978–79)",
+    "notable": "Invaded Uganda and toppled Idi Amin in 1979."
+  },
+  "th": {
+    "region": "Asia",
+    "capital": "Bangkok",
+    "overview": "The only Southeast Asian nation never colonised by a European power.",
+    "wars": "Franco-Thai War (1940–41); World War II (allied with Japan); Cambodia border clashes",
+    "notable": "Has a long record of military coups."
+  },
+  "tl": {
+    "region": "Asia",
+    "capital": "Dili",
+    "overview": "A small half-island nation that won independence from Indonesia in 2002.",
+    "wars": "Indonesian occupation (1975–99)",
+    "notable": "Occupation killed around a quarter of the population."
+  },
+  "tg": {
+    "region": "Africa",
+    "capital": "Lomé",
+    "overview": "A narrow West African state, German then French colony until 1960.",
+    "wars": "No major wars",
+    "notable": "Ruled by the Gnassingbé family since 1967."
+  },
+  "to": {
+    "region": "Oceania",
+    "capital": "Nukuʻalofa",
+    "overview": "The last Polynesian kingdom, never colonised.",
+    "wars": "No major wars",
+    "notable": "Never formally colonised by a European power."
+  },
+  "tt": {
+    "region": "Americas",
+    "capital": "Port of Spain",
+    "overview": "A twin-island nation and Caribbean energy producer.",
+    "wars": "1990 coup attempt",
+    "notable": "Birthplace of calypso and steelpan."
+  },
+  "tn": {
+    "region": "Africa",
+    "capital": "Tunis",
+    "overview": "Site of ancient Carthage and Hannibal's empire. It sparked the 2011 Arab Spring.",
+    "wars": "Punic Wars (ancient); Bizerte Crisis (1961)",
+    "notable": "The Arab Spring began with the Tunisian Revolution of 2010–11."
+  },
+  "tr": {
+    "region": "Middle East and Caucasus",
+    "capital": "Ankara",
+    "overview": "Heart of the old Ottoman Empire, reborn as a republic under Atatürk in 1923. It has NATO's second-largest army.",
+    "wars": "Gallipoli (1915); War of Independence (1919–23); Korean War (1950–53); invasion of Cyprus (1974); Kurdish PKK conflict (1984–)",
+    "notable": "Controls the straits linking the Black Sea and Mediterranean."
+  },
+  "tm": {
+    "region": "Asia",
+    "capital": "Ashgabat",
+    "overview": "A reclusive, gas-rich former Soviet republic.",
+    "wars": "Battle of Geok Tepe (1881)",
+    "notable": "Declared \"permanent neutrality\" in 1995."
+  },
+  "tv": {
+    "region": "Oceania",
+    "capital": "Funafuti",
+    "overview": "A tiny Pacific nation with a very small population.",
+    "wars": "WWII Pacific campaign",
+    "notable": "Threatened by rising seas."
+  },
+  "ug": {
+    "region": "Africa",
+    "capital": "Kampala",
+    "overview": "A landlocked East African nation, infamous for the brutal rule of Idi Amin in the 1970s.",
+    "wars": "Uganda–Tanzania War (1978–79); Bush War (1981–86); LRA conflict (1987–2006); interventions in Congo",
+    "notable": "The LRA became known for abducting child soldiers."
+  },
+  "ua": {
+    "region": "Europe",
+    "capital": "Kyiv",
+    "overview": "A large Eastern European nation that has been fought over for centuries.",
+    "wars": "Ukrainian War of Independence (1917–21); World War II; Russo-Ukrainian War (2014–)",
+    "notable": "Gave up Soviet nuclear weapons in the 1990s."
+  },
+  "ae": {
+    "region": "Middle East and Caucasus",
+    "capital": "Abu Dhabi",
+    "overview": "A federation of seven emirates, rich in oil and finance.",
+    "wars": "Gulf War (1991); war in Yemen (2015–19)",
+    "notable": "Home to Dubai and Burj Khalifa, the world's tallest building."
+  },
+  "gb": {
+    "region": "Europe",
+    "capital": "London",
+    "overview": "A small island that built the largest empire in history. It is a nuclear power and a founding NATO member.",
+    "wars": "Hundred Years' War; Napoleonic Wars; Crimean War; Boer Wars; World Wars I and II; Falklands War (1982); Iraq and Afghanistan",
+    "notable": "Stood alone against Hitler in 1940; cracked Enigma at Bletchley Park."
+  },
+  "us": {
+    "region": "Americas",
+    "capital": "Washington, D.C.",
+    "overview": "A superpower born from the 1776 revolt against Britain. It has the largest military budget on Earth and is the only nation to use nuclear weapons in war.",
+    "wars": "American Revolution (1775–83); Civil War (1861–65); World Wars I and II; Korean War; Vietnam War; Gulf War; Afghanistan (2001–21); Iraq (2003–11)",
+    "notable": "Built the atomic bomb, landed on the Moon in 1969 and led NATO through the Cold War."
+  },
+  "uy": {
+    "region": "Americas",
+    "capital": "Montevideo",
+    "overview": "A small South American democracy sandwiched between Brazil and Argentina.",
+    "wars": "Guerra Grande civil war (1839–51); War of the Triple Alliance (1864–70)",
+    "notable": "Won the first World Cup in 1930."
+  },
+  "uz": {
+    "region": "Asia",
+    "capital": "Tashkent",
+    "overview": "Heart of the old Silk Road and home of Timur's (Tamerlane's) empire.",
+    "wars": "Uzbek–Tajik border tensions; Afghan conflict spillover",
+    "notable": "Timur's capital, Samarkand, is here."
+  },
+  "vu": {
+    "region": "Oceania",
+    "capital": "Port Vila",
+    "overview": "A Melanesian archipelago governed jointly by Britain and France before independence.",
+    "wars": "Coconut War (1980)",
+    "notable": "Famous for land diving (the origin of bungee jumping)."
+  },
+  "ve": {
+    "region": "Americas",
+    "capital": "Caracas",
+    "overview": "An oil-rich nation that led the independence of northern South America under Simón Bolívar.",
+    "wars": "Independence Wars (1810–23); Federal War (1859–63); border dispute with Guyana",
+    "notable": "Home to the world's largest proven oil reserves."
+  },
+  "vn": {
+    "region": "Asia",
+    "capital": "Hanoi",
+    "overview": "A Southeast Asian nation that defeated France and the United States in turn.",
+    "wars": "First Indochina War (1946–54); Vietnam War (1955–75); Cambodian–Vietnamese War (1977–89); Sino-Vietnamese War (1979)",
+    "notable": "Victory at Dien Bien Phu (1954) ended French rule."
+  },
+  "ye": {
+    "region": "Middle East and Caucasus",
+    "capital": "Sanaa",
+    "overview": "The poorest nation in the Arabian peninsula, broken by civil war.",
+    "wars": "North Yemen Civil War (1962–70); Civil War (1994); Houthi–Saudi war (2015–)",
+    "notable": "One of the world's worst humanitarian crises."
+  },
+  "zm": {
+    "region": "Africa",
+    "capital": "Lusaka",
+    "overview": "A copper-rich nation that hosted anti-apartheid and liberation movements.",
+    "wars": "No major wars; support for liberation struggles",
+    "notable": "Kenneth Kaunda led it from 1964 to 1991."
+  },
+  "zw": {
+    "region": "Africa",
+    "capital": "Harare",
+    "overview": "Formerly Rhodesia, it won independence in 1980 after a long guerrilla war.",
+    "wars": "Rhodesian Bush War (1964–79); Gukurahundi (1980s); Second Congo War (1998–2003)",
+    "notable": "Hyperinflation devastated its economy in the 2000s."
+  }
+}

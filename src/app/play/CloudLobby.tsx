@@ -6,6 +6,7 @@ import countries from '../../../data/countries.json';
 import {cloudRequest,useAuth} from '@/cloud/auth';
 import {BrowserCampaignStore} from '@/game/storage';
 import type {GameState} from '@/game/engine';
+import CountryBriefing from '@/components/CountryBriefing';
 import './cloud.css';
 type Summary={id:string;country:string;round:number;revision:number;territories:number;finished:boolean;provenance:string};
 export default function CloudLobby(){
@@ -14,6 +15,7 @@ export default function CloudLobby(){
   const [listError,setListError]=useState(''),[listLoaded,setListLoaded]=useState(false);
   const [local,setLocal]=useState<GameState[]>([]),[consent,setConsent]=useState(false),[pending,setPending]=useState(false),[message,setMessage]=useState(''),[loading,setLoading]=useState(false);
   const createId=useRef<{uid:string;country:string;id:string}|null>(null);
+  const selectedCountry=countries.find(c=>c.code===country)??countries[0];
   const refresh=useCallback(async(after?:string)=>{
     if(!auth.user)return;setLoading(true);setListError('');
     try{const result=await cloudRequest<{campaigns:Summary[];next:string|null}>(`/api/campaigns${after?`?after=${encodeURIComponent(after)}`:''}`,{user:auth.user});setCampaigns(old=>after?[...old,...result.campaigns]:result.campaigns);setNext(result.next);setListLoaded(true);}
@@ -48,7 +50,9 @@ export default function CloudLobby(){
   return <main className="cloud-page"><section className="cloud-panel"><Link href="/">← Title screen</Link><h1>Your cloud campaigns</h1><p className="cloud-mode">Cloud mode · server-controlled moves · public campaign links</p><div className="cloud-actions"><Link className="cloud-button" href="/game/demo">Local development / demo</Link><Link className="cloud-button" href="/analytics">Local analytics</Link><Link className="cloud-button" href="/account">{auth.user?'Account':'Sign in / create account'}</Link></div>
     {!auth.configured?<p className="cloud-notice">Cloud services are not configured. Follow <code>docs/FIREBASE.md</code>. The local demo works independently.</p>:auth.loading?<p role="status">Checking your session…</p>:!auth.user?<p>Sign in to create, import, or manage campaigns. Anyone with a campaign link can watch without an account.</p>:<>
       <p>Signed in as {auth.user.email??'commander'}. Campaign state and dispatch history are visible to anyone with its link.</p><button disabled={pending} onClick={()=>void auth.signOut().catch(()=>setMessage('Sign-out failed. Please retry.'))}>Sign out</button>
-      <label>Starting country<select value={country} disabled={pending} onChange={e=>setCountry(e.target.value)}>{countries.map(c=><option key={c.code} value={c.code}>{c.name}</option>)}</select></label><button disabled={pending} onClick={()=>void create()}>{pending?'Saving…':'Start cloud campaign'}</button><button disabled={pending||loading} onClick={()=>void refresh()}>Refresh campaigns</button>
+      <label>Starting country<select value={country} disabled={pending} onChange={e=>setCountry(e.target.value)}>{countries.map(c=><option key={c.code} value={c.code}>{c.name}</option>)}</select></label>
+      <CountryBriefing key={country} country={selectedCountry}/>
+      <button disabled={pending} onClick={()=>void create()}>{pending?'Saving…':'Start cloud campaign'}</button><button disabled={pending||loading} onClick={()=>void refresh()}>Refresh campaigns</button>
       <h2>Saved in Firestore</h2>{loading&&<p role="status">Loading campaigns…</p>}{listError&&<p className="cloud-notice" role="alert">Could not load saved campaigns: {listError} Use Refresh campaigns to retry.</p>}{!loading&&!listError&&listLoaded&&!campaigns.length&&<p>No cloud campaigns found for this account. Browser-only campaigns can be imported below.</p>}
       {campaigns.map(c=><article key={c.id} className="cloud-save"><strong>{c.country}</strong><p>Round {c.round} · {c.territories}/10 countries · {c.finished?'Ended':'In progress'}{c.provenance==='local-import'?' · Legacy local import':''}</p><Link className="cloud-button" href={`/campaign/${c.id}`}>Open / resume</Link><button disabled={pending} onClick={()=>void navigator.clipboard.writeText(`${location.origin}/campaign/${c.id}`).then(()=>setMessage('Public watch link copied.')).catch(()=>setMessage(`Share this URL: ${location.origin}/campaign/${c.id}`))}>Copy public link</button><button disabled={pending} onClick={async()=>{
         if(!window.confirm(`Delete the cloud campaign for ${c.country} and its complete history?`))return;
