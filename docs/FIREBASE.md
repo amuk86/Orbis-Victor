@@ -198,6 +198,21 @@ created by the test suite.
    password reset email delivery, cross-device resume, public viewing, and owner
    controls against that environment before using it for real campaigns.
 
+### Firebase Auth startup on Vercel
+
+The project pins Node 24 through `package.json`. Its scoped npm override keeps
+`jwks-rsa` on the CommonJS-compatible `jose` 5 release line. Without this override,
+Firebase Admin 14 loads `jwks-rsa` 4, which calls `require('jose')` on an ESM-only
+release. Runtimes with `require(ESM)` disabled fail at startup with
+`ERR_REQUIRE_ESM`, before the API can return JSON. This can appear in the browser
+as an empty-response JSON parsing error.
+
+Keep `package-lock.json` with this override and deploy using `npm ci`. The cloud
+unit suite checks Firebase Auth startup and JWKS signing-key conversion in a
+subprocess with `--no-experimental-require-module`. Remove the override only after
+the upstream dependency works with that check. See
+[the upstream compatibility issue](https://github.com/auth0/node-jwks-rsa/issues/507).
+
 See [Next.js on Vercel](https://vercel.com/docs/frameworks/full-stack/nextjs) and
 [Vercel environment variables](https://vercel.com/docs/environment-variables).
 

@@ -1,5 +1,21 @@
 const {test}=require('node:test');
 const assert=require('node:assert/strict');
+const {execFileSync}=require('node:child_process');
+test('Firebase Auth and JWKS signing keys work with require(ESM) disabled',()=>{
+ execFileSync(process.execPath,['--no-experimental-require-module','-e',`
+  const assert=require('node:assert/strict');
+  const {generateKeyPairSync}=require('node:crypto');
+  assert.equal(typeof require('firebase-admin/auth').getAuth,'function');
+  const jwks=require('jwks-rsa');
+  const {publicKey}=generateKeyPairSync('rsa',{modulusLength:2048});
+  const client=jwks({jwksUri:'https://unused.invalid',cache:false,rateLimit:false});
+  client.getKeys=async()=>[{...publicKey.export({format:'jwk'}),kid:'test-key',alg:'RS256',use:'sig'}];
+  client.getSigningKeys().then(keys=>{
+   assert.equal(keys[0].kid,'test-key');
+   assert.equal(keys[0].getPublicKey(),publicKey.export({format:'pem',type:'spki'}));
+  }).catch(error=>{console.error(error);process.exitCode=1;});
+ `],{cwd:require('node:path').resolve(__dirname,'../..'),stdio:'pipe',timeout:15000});
+});
 const {initialiseGame,createGame,transition}=require('../../.cloud-test-build/src/game/engine.js');
 const {nextNpcAction}=require('../../.cloud-test-build/src/game/npc.js');
 const {applyCommand,commandFrom}=require('../../.cloud-test-build/src/server/protocol.js');
@@ -7,6 +23,17 @@ const {historyPages}=require('../../.cloud-test-build/src/server/history.js');
 const {validateImport}=require('../../.cloud-test-build/src/server/import-validation.js');
 const pool=require('../../data/countries.json');
 const {respond}=require('../../.cloud-test-build/src/server/http.js');
+const {readCloudResponse}=require('../../.cloud-test-build/src/cloud/response.js');
+test('cloud responses preserve API errors and explain empty or non-JSON deployment failures',async()=>{
+ assert.deepEqual(await readCloudResponse(Response.json({campaigns:[]})),{campaigns:[]});
+ await assert.rejects(readCloudResponse(Response.json({error:'Sign in again.'},{status:401})),e=>e.status===401&&e.message==='Sign in again.');
+ for(const [body,status] of [['',500],['<html>private platform details</html>',502],['{"campaigns":',200]]){
+  await assert.rejects(readCloudResponse(new Response(body,{status})),e=>e.status===status&&e.message.includes(`HTTP ${status}`)&&!e.message.includes('private platform details'));
+ }
+ await assert.rejects(readCloudResponse(new Response('',{status:504})),e=>e.status===504&&/timed out/.test(e.message));
+ await assert.rejects(readCloudResponse(Response.json(null,{status:503})),e=>e.status===503&&/Cloud request failed/.test(e.message));
+ await assert.rejects(readCloudResponse(Response.json(null)),e=>/invalid data/.test(e.message));
+});
 test('missing Firestore index produces an actionable error without leaking backend details',async()=>{
  const response=await respond(async()=>{throw Object.assign(new Error('The query requires an index. private-backend-details'),{code:9});});
  assert.equal(response.status,503);

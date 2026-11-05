@@ -3,6 +3,7 @@ import { useEffect,useState } from 'react';
 import { onAuthStateChanged,signOut } from 'firebase/auth';
 import type { User } from 'firebase/auth';
 import { firebase,firebaseConfigured } from './firebase';
+import { readCloudResponse } from './response';
 export function useAuth(){
   const [user,setUser]=useState<User|null>(null),[loading,setLoading]=useState(firebaseConfigured),[error,setError]=useState('');
   useEffect(()=>{
@@ -18,7 +19,5 @@ export async function cloudRequest<T>(path:string,options:{method?:string;body?:
   let response:Response;
   try{response=await fetch(path,{method:options.method??'GET',headers,body:options.body===undefined?undefined:JSON.stringify(options.body),cache:'no-store',signal:AbortSignal.timeout(options.method==='PUT'?65_000:30_000)});}
   catch{throw new Error('Network connection lost. The move is not confirmed. Reconnect and refresh before trying again.');}
-  const data=await response.json();
-  if(!response.ok){const e=new Error(data.error??'Cloud request failed.') as Error&{status:number};e.status=response.status;throw e;}
-  return data as T;
+  return readCloudResponse<T>(response);
 }
