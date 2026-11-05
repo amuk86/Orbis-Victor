@@ -10,16 +10,17 @@ const {createGame}=require('../../.cloud-test-build/src/game/engine.js');
 const pool=require('../../data/countries.json');
 const pause=ms=>new Promise(r=>setTimeout(r,ms));
 async function until(work,label,timeout=60000){const start=Date.now();while(Date.now()-start<timeout){const value=await work();if(value)return value;await pause(100);}throw new Error(`Timed out: ${label}`);}
-test('browser normal mode steps individually; fast-forward batches and avoids follow-up state GETs', {timeout:180000},async t=>{
+test('browser shows every fast-forward move and auto-saves completed allocations with safe retry', {timeout:240000},async t=>{
  const profile=fs.mkdtempSync(path.join(os.tmpdir(),'orbis-browser-batch-')),port=Number(process.env.ORBIS_CDP_PORT??9224);
  const chrome=spawn(process.env.CHROME_BIN??'/usr/bin/google-chrome',['--headless=new','--no-sandbox','--disable-dev-shm-usage','--disable-gpu',`--remote-debugging-port=${port}`,`--user-data-dir=${profile}`,'--no-first-run','about:blank'],{stdio:'ignore'});
- let socket;const pending=new Map(),requests=[],exceptions=[];let seq=0;
+ let socket,pausedAllocationResponse;const pending=new Map(),requests=[],exceptions=[];let seq=0;
  try{
   await until(async()=>{try{return (await fetch(`http://127.0.0.1:${port}/json/version`)).ok;}catch{return false;}},'Chrome startup');
   const target=await(await fetch(`http://127.0.0.1:${port}/json/new?about:blank`,{method:'PUT'})).json();
   socket=new WebSocket(target.webSocketDebuggerUrl);await new Promise((r,j)=>{socket.onopen=r;socket.onerror=j;});
   socket.onmessage=event=>{const message=JSON.parse(event.data);if(message.id){const p=pending.get(message.id);pending.delete(message.id);if(message.error)p.reject(new Error(message.error.message));else p.resolve(message.result);}
    if(message.method==='Runtime.exceptionThrown')exceptions.push(message.params.exceptionDetails.text);
+   if(message.method==='Fetch.requestPaused')pausedAllocationResponse=message.params.requestId;
    if(message.method==='Network.requestWillBeSent'){const r=message.params.request;if(r.url.startsWith(base+'/api/campaigns/'))requests.push({url:r.url,method:r.method,body:r.postData?JSON.parse(r.postData):null});}
   };
   const send=(method,params={})=>new Promise((resolve,reject)=>{const id=++seq;pending.set(id,{resolve,reject});socket.send(JSON.stringify({id,method,params}));});
@@ -29,6 +30,10 @@ test('browser normal mode steps individually; fast-forward batches and avoids fo
   const signup=await(await fetch(`http://${process.env.FIREBASE_AUTH_EMULATOR_HOST}/identitytoolkit.googleapis.com/v1/accounts:signUp?key=demo-api-key`,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({email,password,returnSecureToken:true})})).json();assert.ok(signup.localId);
   const suffix=Date.now(),ids=[`browser-normal-${suffix}`,`browser-fast-${suffix}`];
   for(const id of ids){const s=createGame(pool,'za',()=>.5,id);s.order=s.players.map(p=>p.id);s.turnIndex=1;for(const c of s.countries)c.soldiers=2;await admin().db.runTransaction(async tx=>persistNew(tx,id,signup.localId,s,'cloud'));}
+  const allocationId=`browser-allocation-${suffix}`,allocation=createGame(pool,'za',()=>.5,allocationId);
+  allocation.order=allocation.players.map(p=>p.id);allocation.turnIndex=0;allocation.round=2;allocation.phase='reinforce';allocation.reinforcements=4;
+  for(const c of allocation.countries)c.soldiers=2;allocation.countries[1].ownerId='human';
+  await admin().db.runTransaction(async tx=>persistNew(tx,allocationId,signup.localId,allocation,'cloud'));
   await send('Page.navigate',{url:base+'/account'});
   try{await until(()=>evaluate(`!!document.querySelector('input[type=email]')`),'account form');}catch(e){t.diagnostic(await evaluate('document.body.innerText.slice(0,900)'));t.diagnostic(JSON.stringify(exceptions));throw e;}
   await evaluate(`(()=>{for(const [type,value] of [['email',${JSON.stringify(email)}],['password',${JSON.stringify(password)}]]){const input=document.querySelector('input[type='+type+']');Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set.call(input,value);input.dispatchEvent(new Event('input',{bubbles:true}));}document.querySelector('form button[type=submit]').click();})()`);
@@ -65,6 +70,35 @@ test('browser normal mode steps individually; fast-forward batches and avoids fo
     assert.equal((await publicCampaign(id)).revision,1);
    }
   }
+  requests.length=0;await send('Page.navigate',{url:base+'/campaign/'+allocationId});
+  await until(()=>evaluate(`!!document.querySelector('.ov-territory:not(:disabled)')&&document.querySelector('.ov-turn-status')?.textContent.includes('place 4 soldiers')`),'reinforcement controls');
+  for(const [n,index] of [0,1,0].entries()){
+   await evaluate(`document.querySelectorAll('.ov-territory')[${index}].click()`);
+   await until(()=>evaluate(`document.querySelector('.ov-turn-status').textContent.includes('place ${3-n} soldiers')`),'instant troop preview');
+  }
+  assert.equal(requests.filter(r=>r.method==='POST').length,0,'partial placements must make no cloud writes');
+  const before=await publicCampaign(allocationId);assert.equal(before.revision,0);assert.equal(before.state.reinforcements,4);
+  await send('Fetch.enable',{patterns:[{urlPattern:base+'/api/campaigns/'+allocationId+'/commands',requestStage:'Response'}]});
+  await evaluate(`document.querySelectorAll('.ov-territory')[1].click()`);
+  await until(()=>pausedAllocationResponse,'allocation response');
+  assert.equal(await evaluate(`[...document.querySelectorAll('button')].find(b=>b.textContent==='End turn').disabled`),true,'turn must stay locked while saving');
+  assert.deepEqual(await evaluate(`[...document.querySelectorAll('.ov-territory')].slice(0,2).map(b=>Number(b.querySelector('.ov-troops').textContent))`),[4,4]);
+  // The server committed successfully, but the response is lost. Retrying must not add troops again.
+  await send('Fetch.fulfillRequest',{requestId:pausedAllocationResponse,responseCode:503,responseHeaders:[{name:'Content-Type',value:'application/json'}],body:Buffer.from(JSON.stringify({error:'Simulated lost allocation confirmation.'})).toString('base64')});
+  await send('Fetch.disable');
+  await until(()=>evaluate(`!![...document.querySelectorAll('button')].find(b=>b.textContent==='Retry saving allocation'&&!b.disabled)`),'retained allocation retry');
+  assert.equal(await evaluate(`[...document.querySelectorAll('button')].find(b=>b.textContent==='End turn').disabled`),true);
+  assert.deepEqual(await evaluate(`[...document.querySelectorAll('.ov-territory')].slice(0,2).map(b=>Number(b.querySelector('.ov-troops').textContent))`),[4,4]);
+  await evaluate(`[...document.querySelectorAll('button')].find(b=>b.textContent==='Retry saving allocation').click()`);
+  await until(()=>evaluate(`document.querySelector('.cloud-toolbar')?.innerText.includes('Saved revision 1')&&![...document.querySelectorAll('button')].find(b=>b.textContent==='End turn').disabled`),'saved allocation unlock');
+  const submissions=requests.filter(r=>r.method==='POST');assert.equal(submissions.length,2);
+  assert.deepEqual(submissions[0].body,submissions[1].body,'uncertain saves must retry the exact same request');
+  assert.equal(submissions[0].body.command.type,'reinforce-all');assert.equal(submissions[0].body.command.placements.length,4);
+  const savedAllocation=await publicCampaign(allocationId);assert.equal(savedAllocation.revision,1);assert.equal(savedAllocation.state.reinforcements,0);
+  assert.deepEqual(savedAllocation.state.countries.slice(0,2).map(c=>c.soldiers),[4,4]);
+  await send('Page.reload');await until(()=>evaluate(`document.querySelector('.cloud-toolbar')?.innerText.includes('Saved revision 1')`),'resume saved allocation');
+  assert.deepEqual(await evaluate(`[...document.querySelectorAll('.ov-territory')].slice(0,2).map(b=>Number(b.querySelector('.ov-troops').textContent))`),[4,4]);
+  t.diagnostic('Reinforcements: three instant placements made no requests; the last submitted the allocation; lost-confirmation retry did not duplicate troops.');
   assert.deepEqual(exceptions,[]);
  }finally{
   if(socket)socket.close();chrome.kill('SIGTERM');await new Promise(r=>{if(chrome.exitCode!==null)r();else chrome.once('exit',r);});

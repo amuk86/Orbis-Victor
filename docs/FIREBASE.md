@@ -118,6 +118,19 @@ usually needs no follow-up state fetch. Listener updates for the same revision a
 ignored; other-tab revisions or missing history pages still trigger a bounded
 catch-up read. Older responses cannot roll back a newer board or skip a history gap.
 
+Human reinforcement clicks now preview immediately without a request per soldier.
+Placing the final available troop automatically submits one `reinforce-all` command
+containing the ordered country/amount placements, the original revision and one
+request ID. The server validates the full total and ownership, applies the existing
+rules and saves the board and all placement events atomically. Attack/end-turn
+controls stay locked until confirmation. Failed saves retain the preview and offer
+**Retry saving allocation**, reusing the same request so a lost confirmation cannot
+double-place troops. **Reload saved board** discards the preview and reads the
+authoritative result; it does not undo a save that already committed. Another tab's
+changes block further placement until the conflict is resolved. Partial allocations
+are labelled unsaved and are kept only in memory: refreshing/leaving before the
+last troop loses those unsubmitted choices. Spectators see confirmed placements.
+
 Normal mode still runs one NPC action per request with the existing animations.
 Fast-forward sends `npc-batch`: at most 64 actions using the existing strategy and
 server dice, stopping earlier at a human turn, game end, or response-size budget. One transaction checks
@@ -250,6 +263,7 @@ index reads and usage: use the [current Firestore billing documentation](https:/
 | --- | --- |
 | Create campaign | 1 transaction lookup + board/history writes |
 | Successful command/batch | 1 campaign transaction read + 1 board write + new bounded history-page writes |
+| Pending human reinforcement clicks | no additional requests or Firestore writes until the last available troop is placed |
 | Owner move confirmation | board and new events in the same HTTP response; no extra API state read in the usual case; the board listener still reads the changed revision |
 | Active viewer | initial board listener read, then one board read per changed revision, plus incremental history reads and API root reads |
 | Open campaign | root read + latest up to 20 history pages; board listener also reads the root |
@@ -292,6 +306,9 @@ requests, every visible NPC turn during fast-forward, menu pause/resume, lack of
 follow-up owner state fetches, and refresh/resume. It uses a
 temporary Chrome profile and isolated demo campaigns. Set `CHROME_BIN` if Chrome
 is installed elsewhere; `ORBIS_TEST_URL` defaults to `http://localhost:3103`.
+Allocation tests cover immediate previews, invalid totals/ownership, concurrent
+submissions, full event history, automatic submission on the final click, locked
+controls during saving, and retry after an actually committed response is lost.
 They deliberately fail rather than skip when emulator hosts are missing.
 
 Emulators do not verify production IAM, actual Google OAuth/domain setup, real

@@ -8,6 +8,8 @@ import {cloudRequest,useAuth} from '@/cloud/auth';
 import {mergeCampaignView,needsCampaignRefresh} from '@/cloud/campaign-state';
 import type {CampaignView,MoveResponse} from '@/cloud/campaign-state';
 import {FAST_REPLAY_MS,replayStates} from '@/cloud/replay';
+import {allocationCommand,stageAllocation} from '@/cloud/reinforcements';
+import type {AllocationCommand,AllocationDraft} from '@/cloud/reinforcements';
 import type {Command,GameState} from '@/game/engine';
 import GameClient from '../../game/demo/GameClient';
 import '../../play/cloud.css';
@@ -16,6 +18,8 @@ export default function CloudCampaign({id}:{id:string}){
   const [view,setView]=useState<CampaignView|null>(null),[pending,setPending]=useState(false),[syncing,setSyncing]=useState(false),[error,setError]=useState(''),[cached,setCached]=useState(false),[loading,setLoading]=useState(true);
   const [timing,setTiming]=useState<(MoveResponse['timings']&{requestMs:number;actions:number})|null>(null);
   const [playback,setPlayback]=useState<GameState|null>(null);
+  const [allocation,setAllocation]=useState<AllocationDraft|null>(null);
+  const allocationRef=useRef<AllocationDraft|null>(null);
   const playbackPaused=useRef(false);
   const setPlaybackPaused=useCallback((paused:boolean)=>{playbackPaused.current=paused;},[]);
   const current=useRef<CampaignView|null>(null),inFlight=useRef<Promise<void>|null>(null),moving=useRef(false),readingOlder=useRef(false),epoch=useRef(0),observedRevision=useRef(-1);
@@ -42,6 +46,7 @@ export default function CloudCampaign({id}:{id:string}){
   },[id,accept]);
   useEffect(()=>{
     current.current=null;inFlight.current=null;observedRevision.current=-1;moving.current=false;readingOlder.current=false;playbackPaused.current=false;
+    allocationRef.current=null;setAllocation(null);
     setView(null);setLoading(true);setError('');setTiming(null);setPending(false);setSyncing(false);setPlayback(null);
     if(!firebaseConfigured){setError('Firebase is not configured. Use the local demo or follow docs/FIREBASE.md.');setLoading(false);return;}
     let unsubscribe:()=>void=()=>{};
@@ -59,15 +64,22 @@ export default function CloudCampaign({id}:{id:string}){
     }catch(e){setError(e instanceof Error?e.message:'Cloud initialization failed.');setLoading(false);}
     return()=>{epoch.current++;unsubscribe();};
   },[id,refresh]);
+  useEffect(()=>{
+    if(!auth.loading&&allocationRef.current&&allocationRef.current.ownerId!==auth.user?.uid){allocationRef.current=null;setAllocation(null);}
+  },[auth.loading,auth.user?.uid]);
   const owner=!!auth.user&&auth.user.uid===view?.ownerId;
-  async function execute(command:Command|{type:'npc-step'|'npc-batch'}|{type:'launch';source:string;target:string}){
-    const v=current.current;if(!v||!auth.user||auth.user.uid!==v.ownerId||moving.current||inFlight.current||readingOlder.current||v.hasMore||error||cached)return;
+  async function execute(command:Command|AllocationCommand|{type:'npc-step'|'npc-batch'}|{type:'launch';source:string;target:string},attempt?:AllocationDraft){
+    const v=current.current;if(!v||!auth.user||auth.user.uid!==v.ownerId||moving.current||inFlight.current||readingOlder.current||v.hasMore)return;
+    if(attempt){if(!attempt.complete||allocationRef.current!==attempt||attempt.ownerId!==auth.user.uid)return;}
+    else if(allocationRef.current||error||cached)return;
     const generation=epoch.current,start=performance.now();let saved=false;
     moving.current=true;setPending(true);
     try{
-      const result=await cloudRequest<MoveResponse>(`/api/campaigns/${id}/commands`,{method:'POST',user:auth.user,body:{revision:v.revision,requestId:crypto.randomUUID(),command}});
+      const result=await cloudRequest<MoveResponse>(`/api/campaigns/${id}/commands`,{method:'POST',user:auth.user,body:{revision:attempt?.revision??v.revision,requestId:attempt?.requestId??crypto.randomUUID(),command}});
       if(epoch.current!==generation)return;
       setTiming({...result.timings,requestMs:performance.now()-start,actions:result.actions});saved=true;
+      if(attempt&&allocationRef.current===attempt){allocationRef.current=null;setAllocation(null);}
+      setError('');
       // Keep the confirmed board separate from the presentation until each action has been seen.
       if(result.frames?.length){
         setPlayback(v.state);accept(result);
@@ -86,6 +98,21 @@ export default function CloudCampaign({id}:{id:string}){
       }
     }
   }
+  async function send(command:Command){
+    if(command.type!=='reinforce'){await execute(command);return;}
+    const v=current.current;
+    if(!v||!auth.user||auth.user.uid!==v.ownerId||moving.current||inFlight.current||readingOlder.current||v.hasMore||error||cached||allocationRef.current?.complete)return;
+    try{
+      const draft=stageAllocation(v,auth.user.uid,command.country,crypto.randomUUID(),allocationRef.current,command.amount??1);
+      // Ref updates synchronously, so rapid clicks cannot overwrite each other.
+      allocationRef.current=draft;setAllocation(draft);
+      if(draft.complete)await execute(allocationCommand(draft),draft);
+    }catch(e){setError(e instanceof Error?e.message:'This troop could not be placed.');}
+  }
+  async function reloadAllocation(){
+    if(moving.current)return;
+    allocationRef.current=null;setAllocation(null);await refresh();
+  }
   async function older(){
     const v=current.current;if(!v||!v.firstPage||inFlight.current||moving.current||readingOlder.current)return;
     const generation=epoch.current;readingOlder.current=true;setSyncing(true);
@@ -98,10 +125,13 @@ export default function CloudCampaign({id}:{id:string}){
     finally{if(epoch.current===generation){readingOlder.current=false;setSyncing(false);if(needsCampaignRefresh(current.current,observedRevision.current))void refresh();}}
   }
   const busy=pending||syncing;
-  return <><header className="cloud-toolbar"><Link href="/play">Cloud campaigns</Link><span>{owner?'Owner controls':'Public spectator'} · {playback?'Playing moves…':pending?'Saving…':syncing?'Syncing…':cached?'Offline / cached view':`Saved revision ${view?.revision??'—'}`}{view?.provenance==='local-import'?' · Legacy local import':''}</span><Link href="/account">{auth.user?'Account / sign out':'Sign in to your account'}</Link><button onClick={()=>void refresh()} disabled={busy}>Refresh / reconnect</button>{view?.firstPage? <button disabled={busy} onClick={()=>void older()}>Load earlier dispatches</button>:null}
+  const ownAllocation=owner&&allocation?.ownerId===auth.user?.uid?allocation:null;
+  const allocationChanged=!!ownAllocation&&ownAllocation.revision!==view?.revision;
+  return <><header className="cloud-toolbar"><Link href="/play">Cloud campaigns</Link><span>{owner?'Owner controls':'Public spectator'} · {playback?'Playing moves…':pending?'Saving…':syncing?'Syncing…':ownAllocation?ownAllocation.complete?'Allocation unconfirmed':`Placing troops · ${ownAllocation.state.reinforcements} remaining · unsaved`:cached?'Offline / cached view':`Saved revision ${view?.revision??'—'}`}{view?.provenance==='local-import'?' · Legacy local import':''}</span><Link href="/account">{auth.user?'Account / sign out':'Sign in to your account'}</Link><button onClick={()=>void refresh()} disabled={busy}>Refresh / reconnect</button>{view?.firstPage? <button disabled={busy} onClick={()=>void older()}>Load earlier dispatches</button>:null}
       {timing&&<details><summary>Connection timing</summary><p>Last request: {Math.round(timing.requestMs)} ms · Server: {Math.round(timing.serverMs)} ms · Authentication: {Math.round(timing.authMs)} ms · Firestore transaction: {Math.round(timing.transactionMs)} ms · Simulation: {Math.round(timing.simulationMs)} ms · {timing.actions} actions · {timing.attempts} transaction attempts</p></details>}
     </header>
-    {(error||auth.error)&&<p className="cloud-error" role="alert">{error||auth.error} Controls pause until a successful refresh.</p>}
-    {loading?<main className="cloud-page"><p role="status">Loading the shared campaign…</p></main>:view?<GameClient remote={{state:playback??view.state,canControl:owner&&!error&&!cached&&!view.hasMore,pending:busy,send:execute,npcStep:()=>execute({type:'npc-step'}),npcBatch:()=>execute({type:'npc-batch'}),setPlaybackPaused,launch:(source,target)=>execute({type:'launch',source,target}),leave:()=>router.push('/play')}}/>:<main className="cloud-page"><Link href="/game/demo">Play the separate local demo</Link></main>}
+    {ownAllocation&&<aside className="cloud-notice" aria-label="Pending troop allocation"><p role="status">{pending?'Saving all troop placements…':ownAllocation.complete?'Your placements are retained. Retry saving before attacking or ending your turn.':'Place your remaining soldiers. All placements save automatically after the last one.'}{allocationChanged?' The saved campaign has changed. Retry to confirm an uncertain save, or reload the saved board.':''}</p>{ownAllocation.complete&&<button disabled={busy} onClick={()=>void execute(allocationCommand(ownAllocation),ownAllocation)}>Retry saving allocation</button>}<button disabled={busy} onClick={()=>void reloadAllocation()}>Reload saved board</button></aside>}
+    {(error||auth.error)&&<p className="cloud-error" role="alert">{error||auth.error} {ownAllocation?'Your pending placements are still shown.':'Controls pause until a successful refresh.'}</p>}
+    {loading?<main className="cloud-page"><p role="status">Loading the shared campaign…</p></main>:view?<GameClient remote={{state:playback??ownAllocation?.state??view.state,notice:ownAllocation?(allocationChanged?'The saved board changed. Confirm your save or reload the saved board.':pending?'Saving your troop allocation…':ownAllocation.complete?'Your allocation save is unconfirmed. Retry saving to continue.':`Place ${ownAllocation.state.reinforcements} remaining soldiers. All placements save together.`):undefined,canControl:owner&&!error&&!cached&&!view.hasMore&&(!ownAllocation||!ownAllocation.complete&&!allocationChanged),pending:busy,send,npcStep:()=>execute({type:'npc-step'}),npcBatch:()=>execute({type:'npc-batch'}),setPlaybackPaused,launch:(source,target)=>execute({type:'launch',source,target}),leave:()=>router.push('/play')}}/>:<main className="cloud-page"><Link href="/game/demo">Play the separate local demo</Link></main>}
   </>;
 }

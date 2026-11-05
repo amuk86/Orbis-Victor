@@ -157,3 +157,22 @@ test('batch reduces nine NPC transactions to one with the same saved result',asy
  assert.deepEqual({...singleSaved.state,id:'same'}, {...batchSaved.state,id:'same'});
  t.diagnostic(`Local emulator: ${requests} single transactions ${singleMs.toFixed(1)} ms; one batch ${batchMs.toFixed(1)} ms; batch Firestore transaction ${result.timings.transactionMs.toFixed(1)} ms. This is not a production latency benchmark.`);
 });
+
+test('complete reinforcement allocations commit once, preserve history, reject simultaneous stale requests and resume',async()=>{
+ const id='allocation-integration',s=createGame(pool,'za',()=>.5,id);s.order=s.players.map(p=>p.id);s.turnIndex=0;s.round=2;s.phase='reinforce';s.reinforcements=4;s.countries[1].ownerId='human';
+ const {persistNew}=require('../../.cloud-test-build/src/server/campaigns.js');
+ await admin().db.runTransaction(async tx=>persistNew(tx,id,owner,s,'cloud'));
+ const a=s.countries[0].code,b=s.countries[1].code,command={type:'reinforce-all',placements:[{country:a,amount:1},{country:b,amount:1},{country:a,amount:1},{country:b,amount:1}]};
+ const initial=await publicCampaign(id);
+ await assert.rejects(()=>moveCampaign(id,other,0,command,'not-owner'),e=>e.status===403);
+ await assert.rejects(()=>moveCampaign(id,owner,0,{type:'reinforce-all',placements:[{country:a,amount:3}]},'partial'),e=>e.status===400);
+ assert.equal((await publicCampaign(id)).revision,0);
+ const replies=await Promise.allSettled(['allocation-a','allocation-b'].map(requestId=>moveCampaign(id,owner,0,command,requestId)));
+ assert.equal(replies.filter(x=>x.status==='fulfilled').length,1);assert.equal(replies.find(x=>x.status==='rejected').reason.status,409);
+ const winner=replies[0].status==='fulfilled'?'allocation-a':'allocation-b',reply=replies.find(x=>x.status==='fulfilled').value;
+ const retry=await moveCampaign(id,owner,0,command,winner);assert.equal(retry.alreadyApplied,true);
+ assert.deepEqual(reply.state,retry.state);
+ const saved=await publicCampaign(id);assert.equal(saved.revision,1);assert.equal(saved.state.phase,'action');assert.equal(saved.state.reinforcements,0);
+ assert.equal(saved.state.countries[0].soldiers,s.countries[0].soldiers+2);assert.equal(saved.state.countries[1].soldiers,s.countries[1].soldiers+2);
+ assert.deepEqual(saved.state.events,[...initial.state.events,...reply.state.events]);assert.equal(saved.eventCount,initial.eventCount+4);
+});

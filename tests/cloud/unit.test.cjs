@@ -127,3 +127,49 @@ test('out-of-order fetches cannot roll back the board or skip history gaps',()=>
  const stale=mergeCampaignView(caughtUp,view(2,2,3));
  assert.equal(stale.revision,3);assert.equal(stale.historyPages,4);assert.equal(stale.nextPage,4);
 });
+
+const {stageAllocation,allocationCommand}=require('../../.cloud-test-build/src/cloud/reinforcements.js');
+function reinforceRecord(){const r=record();r.state.phase='reinforce';r.state.reinforcements=4;r.state.round=2;r.state.countries[1].ownerId='human';r.eventCount=500;return r;}
+function reinforceView(r=reinforceRecord()){
+ const prior={...state().events[0],id:r.eventCount};
+ return {id:'allocation-case',ownerId:'owner',revision:r.revision,eventCount:r.eventCount,historyPages:1,provenance:'cloud',state:{...r.state,events:[prior]},firstPage:0,nextPage:1,hasMore:false};
+}
+test('rapid reinforcement clicks preview instantly and produce one complete allocation without mutating the saved board',()=>{
+ const r=reinforceRecord(),v=reinforceView(r),before=structuredClone(v);let draft=null;
+ for(let n=0;n<4;n++){
+  draft=stageAllocation(v,'owner',v.state.countries[n===0?0:1].code,`request-${n}`,draft);
+  assert.equal(draft.state.reinforcements,3-n);assert.equal(draft.complete,n===3);
+  if(n<3)assert.throws(()=>allocationCommand(draft),/all available troops/);
+ }
+ assert.equal(draft.requestId,'request-0');assert.equal(draft.placements.length,4);assert.deepEqual(v,before);
+ const command=allocationCommand(draft);assert.deepEqual(Object.keys(command).sort(),['placements','type']);
+ const result=applyCommand(r,'owner',4,command,()=>{throw new Error('No dice expected');});
+ assert.deepEqual(draft.state,{...result.state,events:[v.state.events[0],...result.events]});
+ assert.deepEqual(result.events.map(e=>e.id),[501,502,503,504]);assert.equal(result.state.phase,'action');assert.equal(result.actions,4);
+ assert.throws(()=>stageAllocation(v,'owner',v.state.countries[0].code,'extra',draft),/waiting to be saved/);
+});
+test('complete allocations reject under/over-allocation, enemies and wrong turns without partial changes',()=>{
+ const r=reinforceRecord(),before=structuredClone(r),own=r.state.countries[0].code,enemy=r.state.countries[2].code;
+ for(const placements of [[{country:own,amount:3}],[{country:own,amount:5}],[{country:own,amount:3},{country:enemy,amount:1}],[{country:own,amount:0}],[{country:own,amount:-4}],[]]){
+  assert.throws(()=>applyCommand(r,'owner',4,{type:'reinforce-all',placements},()=>{throw new Error('No dice expected');}),e=>e.status===400);
+  assert.deepEqual(r,before);
+ }
+ const valid={type:'reinforce-all',placements:[{country:own,amount:4}]};
+ assert.throws(()=>applyCommand(r,'visitor',4,valid,()=>.5),e=>e.status===403);
+ assert.throws(()=>applyCommand(r,'owner',3,valid,()=>.5),e=>e.status===409);
+ assert.throws(()=>applyCommand({...r,state:{...r.state,turnIndex:2}},'owner',4,valid,()=>.5),e=>e.status===400);
+ assert.throws(()=>applyCommand({...r,state:{...r.state,phase:'action'}},'owner',4,valid,()=>.5),e=>e.status===400);
+});
+test('allocation parsing rejects spoofed fields, oversized lists and invalid amounts',()=>{
+ const placement={country:'za',amount:1};
+ for(const value of [{type:'reinforce-all',placements:[placement],state:{}},{type:'reinforce-all',placements:[{...placement,actorId:'human'}]},{type:'reinforce-all',placements:[]},{type:'reinforce-all',placements:Array(21).fill(placement)},{type:'reinforce-all',placements:[{country:'za',amount:1.5}]},{type:'reinforce-all',placements:[{country:'za',amount:0}]}])assert.throws(()=>commandFrom(value),e=>e.status===400);
+ assert.deepEqual(commandFrom({type:'reinforce-all',placements:[placement]}),{type:'reinforce-all',placements:[placement]});
+});
+test('allocation previews reject non-owners, enemy placement and campaigns changed by another tab',()=>{
+ const v=reinforceView(),country=v.state.countries[0].code;
+ assert.throws(()=>stageAllocation(v,'visitor',country,'draft'),/owner/);
+ assert.throws(()=>stageAllocation(v,'owner',v.state.countries[2].code,'draft'));
+ const draft=stageAllocation(v,'owner',country,'draft'),before=structuredClone(draft);
+ assert.throws(()=>stageAllocation({...v,revision:v.revision+1},'owner',country,'new',draft),/changed/);
+ assert.deepEqual(draft,before);
+});
