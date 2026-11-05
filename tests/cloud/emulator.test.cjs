@@ -176,3 +176,19 @@ test('complete reinforcement allocations commit once, preserve history, reject s
  assert.equal(saved.state.countries[0].soldiers,s.countries[0].soldiers+2);assert.equal(saved.state.countries[1].soldiers,s.countries[1].soldiers+2);
  assert.deepEqual(saved.state.events,[...initial.state.events,...reply.state.events]);assert.equal(saved.eventCount,initial.eventCount+4);
 });
+
+test('transfer batches are atomic, versioned, resumable, and safe to retry',async()=>{
+ const id='transfer-integration',s=createGame(pool,'za',()=>.5,id);s.order=s.players.map(p=>p.id);s.turnIndex=0;
+ s.phase='action';s.countries[0].soldiers=12;for(const c of s.countries.slice(0,3))c.ownerId='human';s.countries[1].soldiers=2;s.countries[2].soldiers=1;
+ const {persistNew}=require('../../.cloud-test-build/src/server/campaigns.js');await admin().db.runTransaction(async tx=>persistNew(tx,id,owner,s,'cloud'));
+ const a=s.countries[0].code,b=s.countries[1].code,enemy=s.countries[3].code;
+ const command={type:'transfer-batch',moves:[{source:a,target:b,amount:1},{source:a,target:b,amount:1},{source:b,target:s.countries[2].code,amount:1}]};
+ await assert.rejects(()=>moveCampaign(id,other,0,command,'intruder'),e=>e.status===403);
+ await assert.rejects(()=>moveCampaign(id,owner,0,{type:'transfer-batch',moves:[command.moves[0],{source:a,target:enemy,amount:1}]},'invalid-tail'),e=>e.status===400);
+ assert.equal((await publicCampaign(id)).revision,0);
+ const results=await Promise.allSettled(['transfer-a','transfer-b'].map(requestId=>moveCampaign(id,owner,0,command,requestId)));
+ assert.equal(results.filter(x=>x.status==='fulfilled').length,1);assert.equal(results.find(x=>x.status==='rejected').reason.status,409);
+ const winner=results[0].status==='fulfilled'?'transfer-a':'transfer-b';const retry=await moveCampaign(id,owner,0,command,winner);assert.equal(retry.alreadyApplied,true);
+ const saved=await publicCampaign(id);assert.equal(saved.revision,1);assert.deepEqual(saved.state.countries.slice(0,3).map(c=>c.soldiers),[10,3,2]);
+ assert.equal(saved.eventCount,s.events.length+3);assert.equal(saved.state.events.filter(e=>e.kind==='transfer').length,3);
+});

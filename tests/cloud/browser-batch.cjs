@@ -10,7 +10,7 @@ const {createGame}=require('../../.cloud-test-build/src/game/engine.js');
 const pool=require('../../data/countries.json');
 const pause=ms=>new Promise(r=>setTimeout(r,ms));
 async function until(work,label,timeout=60000){const start=Date.now();while(Date.now()-start<timeout){const value=await work();if(value)return value;await pause(100);}throw new Error(`Timed out: ${label}`);}
-test('browser shows every fast-forward move and auto-saves completed allocations with safe retry', {timeout:240000},async t=>{
+test('browser batches NPCs, allocations and transfers while preserving playback and save barriers', {timeout:300000},async t=>{
  const profile=fs.mkdtempSync(path.join(os.tmpdir(),'orbis-browser-batch-')),port=Number(process.env.ORBIS_CDP_PORT??9224);
  const chrome=spawn(process.env.CHROME_BIN??'/usr/bin/google-chrome',['--headless=new','--no-sandbox','--disable-dev-shm-usage','--disable-gpu',`--remote-debugging-port=${port}`,`--user-data-dir=${profile}`,'--no-first-run','about:blank'],{stdio:'ignore'});
  let socket,pausedAllocationResponse;const pending=new Map(),requests=[],exceptions=[];let seq=0;
@@ -34,6 +34,12 @@ test('browser shows every fast-forward move and auto-saves completed allocations
   allocation.order=allocation.players.map(p=>p.id);allocation.turnIndex=0;allocation.round=2;allocation.phase='reinforce';allocation.reinforcements=4;
   for(const c of allocation.countries)c.soldiers=2;allocation.countries[1].ownerId='human';
   await admin().db.runTransaction(async tx=>persistNew(tx,allocationId,signup.localId,allocation,'cloud'));
+  const transferIds=['idle','end','attack'].map(label=>`browser-transfer-${label}-${suffix}`);
+  for(const id of transferIds){
+   const s=createGame(pool,'za',()=>.5,id);s.order=s.players.map(p=>p.id);s.turnIndex=0;s.phase='action';
+   for(const c of s.countries)c.soldiers=1;for(const c of s.countries.slice(0,3))c.ownerId='human';s.countries[0].soldiers=12;s.countries[1].soldiers=2;
+   await admin().db.runTransaction(async tx=>persistNew(tx,id,signup.localId,s,'cloud'));
+  }
   await send('Page.navigate',{url:base+'/account'});
   try{await until(()=>evaluate(`!!document.querySelector('input[type=email]')`),'account form');}catch(e){t.diagnostic(await evaluate('document.body.innerText.slice(0,900)'));t.diagnostic(JSON.stringify(exceptions));throw e;}
   await evaluate(`(()=>{for(const [type,value] of [['email',${JSON.stringify(email)}],['password',${JSON.stringify(password)}]]){const input=document.querySelector('input[type='+type+']');Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set.call(input,value);input.dispatchEvent(new Event('input',{bubbles:true}));}document.querySelector('form button[type=submit]').click();})()`);
@@ -99,6 +105,60 @@ test('browser shows every fast-forward move and auto-saves completed allocations
   await send('Page.reload');await until(()=>evaluate(`document.querySelector('.cloud-toolbar')?.innerText.includes('Saved revision 1')`),'resume saved allocation');
   assert.deepEqual(await evaluate(`[...document.querySelectorAll('.ov-territory')].slice(0,2).map(b=>Number(b.querySelector('.ov-troops').textContent))`),[4,4]);
   t.diagnostic('Reinforcements: three instant placements made no requests; the last submitted the allocation; lost-confirmation retry did not duplicate troops.');
+  async function openTransfers(id){
+   requests.length=0;pausedAllocationResponse=undefined;await send('Page.navigate',{url:base+'/campaign/'+id});
+   await until(()=>evaluate(`!!document.querySelector('.ov-territory:not(:disabled)')`),'transfer board');
+   await evaluate(`document.querySelectorAll('.ov-territory')[0].click()`);
+   await until(()=>evaluate(`document.querySelectorAll('.ov-territory')[0].getAttribute('aria-pressed')==='true'`),'transfer source');
+  }
+  const troops=()=>evaluate(`[...document.querySelectorAll('.ov-territory')].slice(0,3).map(b=>Number(b.querySelector('.ov-troops').textContent))`);
+  const posts=()=>requests.filter(r=>r.method==='POST');
+  // Background commits must not block additional transfer clicks.
+  await openTransfers(transferIds[0]);
+  await send('Fetch.enable',{patterns:[{urlPattern:base+'/api/campaigns/'+transferIds[0]+'/commands',requestStage:'Request'}]});
+  await evaluate(`document.querySelectorAll('.ov-territory')[1].click()`);
+  await until(()=>pausedAllocationResponse,'idle transfer batch');
+  assert.equal(posts().length,1);assert.equal(posts()[0].body.command.type,'transfer-batch');assert.equal(posts()[0].body.command.moves.length,1);
+  assert.equal(await evaluate(`document.querySelectorAll('.ov-territory')[2].disabled`),false,'background saves must allow transfer clicks');
+  await evaluate(`document.querySelectorAll('.ov-territory')[2].click();document.querySelectorAll('.ov-territory')[2].click()`);
+  await until(async()=>JSON.stringify(await troops())===JSON.stringify([9,3,3]),'instant clicks during save');
+  await send('Fetch.continueRequest',{requestId:pausedAllocationResponse});await send('Fetch.disable');
+  await until(()=>evaluate(`document.querySelector('.cloud-toolbar')?.innerText.includes('Saved revision 2')`),'pending suffix save');
+  assert.equal(posts().length,2);assert.equal(posts()[1].body.command.moves.length,2);assert.equal(posts()[1].body.revision,1);
+  assert.deepEqual((await publicCampaign(transferIds[0])).state.countries.slice(0,3).map(c=>c.soldiers),[9,3,3]);
+  // Three rapid clicks followed by end-turn in the same task bypass the idle delay.
+  // Lose the committed transfer response: end-turn must wait through an idempotent retry.
+  await openTransfers(transferIds[1]);
+  await send('Fetch.enable',{patterns:[{urlPattern:base+'/api/campaigns/'+transferIds[1]+'/commands',requestStage:'Response'}]});
+  await evaluate(`for(let i=0;i<3;i++)document.querySelectorAll('.ov-territory')[1].click();for(let i=0;i<2;i++)[...document.querySelectorAll('button')].find(b=>b.textContent==='End turn').click()`);
+  await until(()=>pausedAllocationResponse,'transfer flush before end-turn');
+  assert.deepEqual(posts().map(r=>r.body.command.type),['transfer-batch']);assert.equal(posts()[0].body.command.moves.length,3);
+  assert.equal(await evaluate(`[...document.querySelectorAll('button')].find(b=>b.textContent==='End turn').disabled`),true);
+  await send('Fetch.fulfillRequest',{requestId:pausedAllocationResponse,responseCode:503,responseHeaders:[{name:'Content-Type',value:'application/json'}],body:Buffer.from(JSON.stringify({error:'Simulated lost transfer confirmation.'})).toString('base64')});await send('Fetch.disable');
+  await until(()=>evaluate(`!![...document.querySelectorAll('button')].find(b=>b.textContent==='Retry saving transfers'&&!b.disabled)`),'transfer retry');
+  assert.deepEqual((await troops()).slice(0,2),[9,5]);assert.equal(posts().length,1,'end-turn must not run after a failed save');
+  await evaluate(`[...document.querySelectorAll('button')].find(b=>b.textContent==='Retry saving transfers').click()`);
+  await until(()=>evaluate(`document.querySelector('.cloud-toolbar')?.innerText.includes('Saved revision 2')`),'retry then end-turn');
+  await evaluate(`[...document.querySelectorAll('button')].find(b=>b.textContent==='Menu').click()`);
+  const endPosts=posts().filter(r=>r.body.command.type==='transfer-batch'||r.body.command.type==='end');
+  assert.deepEqual(endPosts.map(r=>r.body.command.type),['transfer-batch','transfer-batch','end']);assert.deepEqual(endPosts[0].body,endPosts[1].body);assert.equal(endPosts[2].body.revision,1);
+  const ended=await publicCampaign(transferIds[1]);assert.deepEqual(ended.state.countries.slice(0,2).map(c=>c.soldiers),[9,5]);assert.equal(ended.state.events.filter(e=>e.kind==='transfer').length,3);
+  // Attack must also wait for confirmed transfers and use their resulting revision.
+  await openTransfers(transferIds[2]);
+  await send('Fetch.enable',{patterns:[{urlPattern:base+'/api/campaigns/'+transferIds[2]+'/commands',requestStage:'Request'}]});
+  await evaluate(`document.querySelectorAll('.ov-territory')[1].click()`);
+  await until(async()=>JSON.stringify((await troops()).slice(0,2))===JSON.stringify([11,3]),'attack troop preview');
+  await evaluate(`document.querySelectorAll('.ov-territory')[3].click()`);
+  await until(()=>evaluate(`!document.querySelector('.ov-actions button').disabled`),'attack target');
+  await evaluate(`document.querySelector('.ov-actions button').click()`);
+  await until(()=>pausedAllocationResponse,'transfer flush before attack');
+  assert.deepEqual(posts().map(r=>r.body.command.type),['transfer-batch']);
+  await send('Fetch.continueRequest',{requestId:pausedAllocationResponse});await send('Fetch.disable');
+  await until(()=>evaluate(`document.querySelector('.cloud-toolbar')?.innerText.includes('Saved revision 2')`),'confirmed attack');
+  assert.deepEqual(posts().map(r=>r.body.command.type),['transfer-batch','launch']);assert.equal(posts()[1].body.revision,1);
+  const attacked=await publicCampaign(transferIds[2]);assert.equal(attacked.state.countries[1].soldiers,3);assert.ok(attacked.state.lastBattle);
+  assert.ok(attacked.state.events.findIndex(e=>e.kind==='transfer')<attacked.state.events.findIndex(e=>e.kind==='attack'));
+  t.diagnostic('Transfers: background clicks remain instant; end-turn and attack wait for all transfer saves; a lost confirmation retries without duplication.');
   assert.deepEqual(exceptions,[]);
  }finally{
   if(socket)socket.close();chrome.kill('SIGTERM');await new Promise(r=>{if(chrome.exitCode!==null)r();else chrome.once('exit',r);});

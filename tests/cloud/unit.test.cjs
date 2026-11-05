@@ -173,3 +173,69 @@ test('allocation previews reject non-owners, enemy placement and campaigns chang
  assert.throws(()=>stageAllocation({...v,revision:v.revision+1},'owner',country,'new',draft),/changed/);
  assert.deepEqual(draft,before);
 });
+
+const {TransferBuffer,TRANSFER_IDLE_MS,MAX_TRANSFER_MOVES}=require('../../.cloud-test-build/src/cloud/transfers.js');
+function transferRecord(){const r=record();for(const c of r.state.countries.slice(0,3))c.ownerId='human';r.state.countries[0].soldiers=9;r.state.countries[1].soldiers=2;r.state.countries[2].soldiers=1;r.eventCount=500;return r;}
+function fakeTransferClock(){let time=0,id=0;const jobs=new Map();return {now:()=>time,set:(work,ms)=>{jobs.set(++id,{at:time+ms,work});return id;},clear:key=>jobs.delete(key),tick:ms=>{time+=ms;for(const [key,job] of [...jobs])if(job.at<=time){jobs.delete(key);job.work();}}};}
+function transferHarness(save){
+ const r=transferRecord(),prior={...state().events[0],id:500},clock=fakeTransferClock(),calls=[],statuses=[];let server=r;
+ const h={view:{id:'transfer-case',ownerId:'owner',revision:r.revision,eventCount:r.eventCount,historyPages:1,provenance:'cloud',state:{...r.state,events:[prior]},firstPage:0,nextPage:1,hasMore:false},clock,calls,statuses};
+ const commit=packet=>{
+  const result=applyCommand(server,'owner',packet.revision,packet.command,()=>{throw new Error('No dice expected');}),{events,...core}=result.state,from=h.view.historyPages;
+  server={...server,state:core,revision:server.revision+1,eventCount:server.eventCount+events.length};
+  return {...h.view,revision:server.revision,eventCount:server.eventCount,historyPages:from+1,state:result.state,firstPage:from,nextPage:from+1,hasMore:false};
+ };
+ h.buffer=new TransferBuffer({clock,requestId:()=>`transfer-request-${calls.length}`,save:async p=>{calls.push(structuredClone(p));return save?save(p,commit):commit(p);},changed:s=>statuses.push(s),confirmed:v=>{h.view=mergeCampaignView(h.view,v);}});
+ h.move=(source=0,target=1,amount=1)=>h.buffer.enqueue(h.view,'owner',{source:r.state.countries[source].code,target:r.state.countries[target].code,amount});
+ return h;
+}
+const settle=()=>new Promise(resolve=>setImmediate(resolve));
+test('transfer clicks preview instantly, reset the 400ms deadline, and save one ordered batch',async()=>{
+ const h=transferHarness();h.move();h.clock.tick(300);h.move();h.clock.tick(399);
+ assert.equal(h.calls.length,0);assert.equal(h.buffer.status.state.countries[0].soldiers,7);assert.equal(h.buffer.status.state.countries[1].soldiers,4);
+ h.clock.tick(1);await settle();assert.equal(h.calls.length,1);assert.equal(h.calls[0].command.moves.length,2);
+ assert.equal(h.buffer.status.moves,0);assert.equal(h.view.revision,5);assert.equal(h.view.state.countries[1].soldiers,4);
+ assert.deepEqual(h.view.state.events.map(e=>e.id),[500,501,502]);h.buffer.dispose();
+});
+test('attack/end-turn flush bypasses the timer and waits for transfer confirmation',async()=>{
+ let release;const h=transferHarness(async(p,commit)=>{await new Promise(r=>{release=r;});return commit(p);});h.move();
+ let proceeded=false;const action=(async()=>{if(await h.buffer.flush())proceeded=true;})();
+ assert.equal(h.calls.length,1);assert.equal(proceeded,false);release();await action;assert.equal(proceeded,true);assert.equal(h.view.state.countries[1].soldiers,3);h.buffer.dispose();
+});
+test('new clicks remain instant during a save and become a later versioned batch',async()=>{
+ let release;const h=transferHarness(async(p,commit)=>{if(h.calls.length===1)await new Promise(r=>{release=r;});return commit(p);});
+ h.move();h.clock.tick(TRANSFER_IDLE_MS);assert.equal(h.calls.length,1);h.clock.tick(100);h.move(0,2);assert.equal(h.buffer.status.state.countries[0].soldiers,7);
+ assert.equal(h.calls[0].command.moves.length,1);release();await settle();assert.equal(h.buffer.status.moves,1);assert.equal(h.view.revision,5);
+ h.clock.tick(399);assert.equal(h.calls.length,1);h.clock.tick(1);await settle();assert.equal(h.calls.length,2);assert.equal(h.calls[1].revision,5);
+ assert.equal(h.view.state.countries[0].soldiers,7);assert.equal(h.view.state.countries[2].soldiers,2);assert.equal(h.buffer.status.moves,0);h.buffer.dispose();
+});
+test('flush drains clicks appended during an in-flight save before allowing another action',async()=>{
+ let release;const h=transferHarness(async(p,commit)=>{if(h.calls.length===1)await new Promise(r=>{release=r;});return commit(p);});h.move();h.clock.tick(400);h.move(0,2);
+ const drained=h.buffer.flush();release();assert.equal(await drained,true);assert.equal(h.calls.length,2);assert.equal(h.buffer.status.moves,0);h.buffer.dispose();
+});
+test('failed saves retain all clicks and retry the immutable original packet before its pending suffix',async()=>{
+ let release;let first=true;const cache=new Map();
+ const h=transferHarness(async(p,commit)=>{
+  if(cache.has(p.requestId))return cache.get(p.requestId);
+  if(first){first=false;await new Promise(r=>{release=r;});cache.set(p.requestId,commit(p));throw new Error('Lost response');}
+  return commit(p);
+ });
+ h.move();h.clock.tick(400);h.move(0,2);release();await settle();assert.match(h.buffer.status.error,/Lost/);assert.equal(h.buffer.status.moves,2);
+ assert.equal(await h.buffer.flush(),false);h.clock.tick(1000);assert.equal(h.calls.length,1);
+ assert.equal(await h.buffer.flush(true),true);assert.deepEqual(h.calls[0],h.calls[1]);assert.equal(h.calls.length,3);
+ assert.equal(h.view.state.countries[0].soldiers,7);assert.equal(h.view.state.countries[1].soldiers,3);assert.equal(h.view.state.countries[2].soldiers,2);h.buffer.dispose();
+});
+test('transfer batches preserve rules and reject ownership, stale revisions, invalid late moves and spoofed fields',()=>{
+ const r=transferRecord(),a=r.state.countries[0].code,b=r.state.countries[1].code,enemy=r.state.countries[3].code,before=structuredClone(r),valid={type:'transfer-batch',moves:[{source:a,target:b,amount:2}]};
+ const result=applyCommand(r,'owner',4,valid,()=>.5);assert.equal(result.state.countries[0].soldiers,7);assert.equal(result.state.countries[1].soldiers,4);
+ for(const moves of [[{source:a,target:b,amount:9}],[{source:a,target:enemy,amount:1}],[{source:a,target:b,amount:2},{source:b,target:a,amount:4}]])assert.throws(()=>applyCommand(r,'owner',4,{type:'transfer-batch',moves},()=>.5),e=>e.status===400);
+ assert.deepEqual(r,before);
+ assert.throws(()=>applyCommand(r,'other',4,valid,()=>.5),e=>e.status===403);assert.throws(()=>applyCommand(r,'owner',3,valid,()=>.5),e=>e.status===409);
+ for(const v of [{...valid,state:{}},{...valid,moves:[{source:a,target:b,amount:1,actorId:'human'}]},{...valid,moves:[]},{...valid,moves:Array(MAX_TRANSFER_MOVES+1).fill(valid.moves[0])}])assert.throws(()=>commandFrom(v),e=>e.status===400);
+ assert.deepEqual(commandFrom(valid),valid);
+});
+test('invalid previews and disposed transfer buffers cannot lose valid pending moves or save later',async()=>{
+ const h=transferHarness();h.move();assert.throws(()=>h.move(0,1,8));assert.equal(h.buffer.status.moves,1);
+ assert.throws(()=>h.buffer.enqueue({...h.view,revision:9},'owner',h.calls[0]?.command.moves[0]??{source:'za',target:'jp',amount:1}),/changed/);
+ h.buffer.dispose();h.clock.tick(1000);await settle();assert.equal(h.calls.length,0);assert.equal(await h.buffer.flush(),false);
+});

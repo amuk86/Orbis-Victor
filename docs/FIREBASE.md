@@ -131,6 +131,24 @@ changes block further placement until the conflict is resolved. Partial allocati
 are labelled unsaved and are kept only in memory: refreshing/leaving before the
 last troop loses those unsubmitted choices. Spectators see confirmed placements.
 
+Human redistribution clicks also preview instantly. Their ordered transfers are
+saved in a `transfer-batch` command after 400 ms without another transfer click;
+each new click restarts the timer. Clicks made while a request is saving remain
+visible and become a later batch against the confirmed revision. Before an attack
+or end-turn, the client cancels the timer, drains every pending batch, and only
+then submits the requested action. Input locks during that barrier, rather than
+during normal background transfer saves. Every transfer event is preserved, and
+the server still validates turn/phase, ownership and leaving one soldier behind.
+Packets are capped at 128 moves.
+
+A failed/unconfirmed transfer save retains both its immutable retry packet and any
+later clicks. **Retry saving transfers** confirms that packet before saving the
+pending suffix; an attack/end-turn that was waiting then continues once. **Reload
+saved board** cancels that queued action and discards the unsaved preview; it does
+not undo already committed transfers. A stale version never overwrites another
+device's moves. Pending previews live only in memory: leaving/refreshing before
+confirmation can lose unsubmitted clicks. Spectators see confirmed batches only.
+
 Normal mode still runs one NPC action per request with the existing animations.
 Fast-forward sends `npc-batch`: at most 64 actions using the existing strategy and
 server dice, stopping earlier at a human turn, game end, or response-size budget. One transaction checks
@@ -264,6 +282,7 @@ index reads and usage: use the [current Firestore billing documentation](https:/
 | Create campaign | 1 transaction lookup + board/history writes |
 | Successful command/batch | 1 campaign transaction read + 1 board write + new bounded history-page writes |
 | Pending human reinforcement clicks | no additional requests or Firestore writes until the last available troop is placed |
+| Pending transfer clicks | no save request until 400 ms of idle time or an attack/end-turn flush; one board write per confirmed batch |
 | Owner move confirmation | board and new events in the same HTTP response; no extra API state read in the usual case; the board listener still reads the changed revision |
 | Active viewer | initial board listener read, then one board read per changed revision, plus incremental history reads and API root reads |
 | Open campaign | root read + latest up to 20 history pages; board listener also reads the root |
@@ -310,6 +329,11 @@ Allocation tests cover immediate previews, invalid totals/ownership, concurrent
 submissions, full event history, automatic submission on the final click, locked
 controls during saving, and retry after an actually committed response is lost.
 They deliberately fail rather than skip when emulator hosts are missing.
+
+Transfer tests additionally cover resetting the idle deadline, immediate preview,
+clicks during an in-flight save, draining before attack/end-turn, double-clicked
+end-turn, immutable retry packets after lost confirmations, concurrent commits,
+and rejecting invalid late moves without partial writes.
 
 Emulators do not verify production IAM, actual Google OAuth/domain setup, real
 email delivery, deployed Firestore indexes, Vercel networking, or cross-device
