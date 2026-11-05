@@ -63,3 +63,67 @@ test('history is chunked without truncation and page IDs remain monotonic',()=>{
  assert.deepEqual(pages.flatMap(p=>JSON.parse(p.json)),events);
  assert.ok(pages.every(p=>Buffer.byteLength(p.json)<70000));
 });
+
+const {NPC_BATCH_LIMIT}=require('../../.cloud-test-build/src/server/protocol.js');
+const {mergeCampaignView,needsCampaignRefresh}=require('../../.cloud-test-build/src/cloud/campaign-state.js');
+const {replayStates}=require('../../.cloud-test-build/src/cloud/replay.js');
+function seeded(seed){return ()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296;};}
+function npcRecord(){const r=record();r.state.turnIndex=1;return r;}
+test('NPC batches match individual actions, dice, decisions and complete event IDs for 60 seeds',()=>{
+ for(let seed=1;seed<=60;seed++){
+  const r=npcRecord(),batch=applyCommand(r,'owner',r.revision,{type:'npc-batch'},seeded(seed)),random=seeded(seed);
+  let single=r;const all=[],expected=[];
+  for(let i=0;i<batch.actions;i++){
+   const next=applyCommand(single,'owner',single.revision,{type:'npc-step'},random);
+   all.push(...next.events);const {events,...core}=next.state;
+   expected.push({...next.state,events:[...all]});
+   single={...single,state:core,revision:single.revision+1,eventCount:single.eventCount+events.length};
+  }
+  assert.deepEqual(batch.state,{...single.state,events:all});
+  assert.equal(batch.frames.length,batch.actions);
+  assert.deepEqual([...replayStates({...r.state,events:[]},batch.events,batch.frames)],expected);
+  assert.deepEqual(batch.events.map(e=>e.id),Array.from({length:batch.events.length},(_,i)=>r.eventCount+i+1));
+  assert.ok(batch.actions<=NPC_BATCH_LIMIT);
+  assert.ok(batch.actions===NPC_BATCH_LIMIT||batch.state.phase==='finished'||batch.state.order[batch.state.turnIndex]==='human');
+ }
+});
+test('batch limit bounds endless tied battles and safely resumes the same battle',()=>{
+ const r=npcRecord(),a=r.state.countries[1],d=r.state.countries[0];a.soldiers=9;d.soldiers=8;
+ r.state.phase='battle';r.state.attack={source:a.code,target:d.code};r.state.attackUsed=true;
+ const first=applyCommand(r,'owner',4,{type:'npc-batch'},()=>.5);
+ assert.equal(first.actions,NPC_BATCH_LIMIT);assert.equal(first.state.phase,'battle');
+ const {events,...core}=first.state;
+ const second=applyCommand({...r,state:core,revision:5,eventCount:r.eventCount+events.length},'owner',5,{type:'npc-batch'},()=>.5);
+ assert.equal(second.actions,NPC_BATCH_LIMIT);assert.equal(second.events[0].id,first.events.at(-1).id+1);
+ assert.equal(second.state.countries[1].soldiers,9);assert.equal(second.state.countries[0].soldiers,8);
+});
+test('batch stops at victory, refuses human turns, client limits, forged fields and stale/non-owner RNG',()=>{
+ const r=npcRecord(),p=r.state.order[r.state.turnIndex];
+ for(const c of r.state.countries)c.ownerId=p;
+ const a=r.state.countries[1],d=r.state.countries[0];d.ownerId='human';d.soldiers=1;a.soldiers=9;
+ r.state.phase='battle';r.state.attack={source:a.code,target:d.code};r.state.attackUsed=true;
+ let n=0;const won=applyCommand(r,'owner',4,{type:'npc-batch'},()=>n++%2===0?.99:0);
+ assert.equal(won.actions,1);assert.equal(won.state.phase,'finished');
+ assert.throws(()=>applyCommand(record(),'owner',4,{type:'npc-batch'},()=>.5),e=>e.status===400);
+ for(const c of [{type:'npc-batch',limit:999},{type:'npc-batch',dice:[6]},{type:'npc-batch',actorId:'human'}])assert.throws(()=>commandFrom(c),e=>e.status===400);
+ assert.deepEqual(commandFrom({type:'npc-batch'}),{type:'npc-batch'});
+ for(const [uid,rev,code] of [['visitor',4,403],['owner',3,409]])assert.throws(()=>applyCommand(r,uid,rev,{type:'npc-batch'},()=>{throw new Error('RNG ran before validation');}),e=>e.status===code);
+});
+function view(revision,firstPage,nextPage,historyPages=nextPage){return {id:'campaign-a',ownerId:'owner',revision,eventCount:revision,historyPages,provenance:'cloud',state:{...state(),events:[{...state().events[0],id:revision}]},firstPage,nextPage,hasMore:nextPage<historyPages};}
+test('own move replies need no state fetch; listener notifications defer until response arrives',()=>{
+ const old=view(1,0,2),reply=view(2,2,3);
+ assert.equal(needsCampaignRefresh(old,2,true),false);
+ const merged=mergeCampaignView(old,reply);
+ assert.equal(needsCampaignRefresh(merged,2),false);
+ assert.equal(needsCampaignRefresh(merged,3),true);
+ assert.equal(needsCampaignRefresh(null,0),true);
+ assert.equal(mergeCampaignView(merged,reply).state.events.length,2);
+});
+test('out-of-order fetches cannot roll back the board or skip history gaps',()=>{
+ const old=view(1,0,2),reply=view(3,3,4),merged=mergeCampaignView(old,reply);
+ assert.equal(merged.revision,3);assert.equal(merged.nextPage,2);assert.equal(merged.hasMore,true);
+ const caughtUp=mergeCampaignView(merged,view(3,2,4));
+ assert.equal(caughtUp.nextPage,4);assert.equal(caughtUp.hasMore,false);
+ const stale=mergeCampaignView(caughtUp,view(2,2,3));
+ assert.equal(stale.revision,3);assert.equal(stale.historyPages,4);assert.equal(stale.nextPage,4);
+});

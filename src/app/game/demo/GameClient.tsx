@@ -89,10 +89,14 @@ export default function GameClient({ remote }: { remote?: RemoteGame } = {}) {
   const controls = !!game && !spectator && canPlay(game, LOCAL_OWNER) && !menu && (!remote || (remote.canControl && !remote.pending));
 
   useEffect(() => {
+    remote?.setPlaybackPaused?.(menu || !visible || (defeated && !watchDefeat));
+  }, [menu, visible, defeated, watchDefeat, remote?.setPlaybackPaused]);
+
+  useEffect(() => {
     if (remote && (!remote.canControl || remote.pending)) return;
     if (!game || game.phase === 'finished' || currentPlayer(game).human || menu || !visible || (defeated && !watchDefeat)) return;
     const timer = window.setTimeout(() => {
-      if (remote) { void remote.npcStep(); return; }
+      if (remote) { void (fast ? remote.npcBatch() : remote.npcStep()); return; }
       const action = nextNpcAction(game);
       if (action) send(action);
     }, fast ? 170 : 1020);
@@ -235,7 +239,7 @@ export default function GameClient({ remote }: { remote?: RemoteGame } = {}) {
         </div>
         <details open className="ov-dispatches ov-panel"><summary>Dispatches <span className="ov-drawer-hint">↕</span></summary><div className="ov-dispatch-list" role="log" aria-label="Campaign dispatches" aria-live="off">{game.events.length > historyLimit && <button className="ov-text-button" onClick={() => setHistoryLimit(n => n+300)}>Show earlier dispatches</button>}{game.events.filter(e => e.kind !== 'battle').slice(-historyLimit).map(e => <article key={e.id} className={`ov-dispatch ov-event-${e.kind}`}><small className="ov-dispatch-time">R{e.round} · {game.players.find(p => p.id === e.actorId)?.name}</small><p>{e.text}</p>{e.reason && <p className="ov-dispatch-reason">{e.reason}</p>}</article>)}<div ref={dispatchEnd} /></div></details>
       </div>
-      <footer className="ov-bottom"><div className="ov-actions"><button className="ov-button ov-primary" disabled={!canRoll} onClick={roll} title={canRoll ? 'Roll paired dice' : hint}>Roll dice</button><button className="ov-button" disabled={!controls || game.phase !== 'battle'} onClick={() => human({ type:'stop' })} title="Stop an active attack and end your turn">Stop attack</button><button className="ov-button" disabled={!controls || game.phase !== 'action'} onClick={() => human({ type:'end' })} title={game.phase === 'reinforce' ? 'Place all reinforcements first' : game.phase === 'battle' ? 'Stop the active attack to end your turn' : 'Pass to the next commander'}>End turn</button><button className={`ov-button ${fast ? 'is-active' : ''}`} onClick={() => setFast(v => !v)} aria-pressed={fast}>Fast-forward <span className="ov-speed">{fast ? '6×' : ''}</span></button></div><p className="ov-hint" role="status">{hint}</p></footer>
+      <footer className="ov-bottom"><div className="ov-actions"><button className="ov-button ov-primary" disabled={!canRoll} onClick={roll} title={canRoll ? 'Roll paired dice' : hint}>Roll dice</button><button className="ov-button" disabled={!controls || game.phase !== 'battle'} onClick={() => human({ type:'stop' })} title="Stop an active attack and end your turn">Stop attack</button><button className="ov-button" disabled={!controls || game.phase !== 'action'} onClick={() => human({ type:'end' })} title={game.phase === 'reinforce' ? 'Place all reinforcements first' : game.phase === 'battle' ? 'Stop the active attack to end your turn' : 'Pass to the next commander'}>End turn</button><button className={`ov-button ${fast ? 'is-active' : ''}`} onClick={() => setFast(v => !v)} aria-pressed={fast}>Fast-forward <span className="ov-speed">{fast ? (remote ? 'ON' : '6×') : ''}</span></button></div><p className="ov-hint" role="status">{hint}</p></footer>
       {(game.phase === 'finished' || (defeated && !watchDefeat)) && (
         <Modal className="ov-outcome-dialog" labelledBy="ov-outcome-title">
           <OutcomeScreen

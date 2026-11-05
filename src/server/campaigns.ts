@@ -7,6 +7,11 @@ import { admin } from './firebase-admin';
 import { ApiError, applyCommand, requireOwner } from './protocol';
 import type { CampaignRecord, CloudCommand } from './protocol';
 import { historyPages, pageId } from './history';
+import type {CampaignView} from '../cloud/campaign-state';
+
+function viewOf(id:string,c:CampaignRecord,events:GameState['events'],firstPage:number,nextPage:number):CampaignView {
+  return {id,ownerId:c.ownerId,revision:c.revision,eventCount:c.eventCount,historyPages:c.historyPages,provenance:c.provenance,state:{...c.state,events},firstPage,nextPage,hasMore:nextPage<c.historyPages};
+}
 
 export const digest=(value:string|Buffer)=>createHash('sha256').update(value).digest('hex');
 export const rng=()=>randomInt(0,0x100000000)/0x100000000;
@@ -59,26 +64,36 @@ export async function publicCampaign(id:string,options:{after?:number;before?:nu
   const pages=await ref.collection('history').where('seq','>=',start).where('seq','<',end).orderBy('seq').limit(20).get();
   const events=pages.docs.flatMap(d=>JSON.parse(d.data().json));
   const nextPage=pages.size?pages.docs.at(-1)!.data().seq+1:start;
-  return {id,ownerId:c.ownerId,revision:c.revision,eventCount:c.eventCount,historyPages:c.historyPages,provenance:c.provenance,state:{...c.state,events},firstPage:start,nextPage,hasMore:nextPage<end};
+  return {...viewOf(id,c,events,start,nextPage),hasMore:nextPage<end};
 }
 export async function moveCampaign(id:string,uid:string,revision:number,command:CloudCommand,requestId:string) {
   const ref=admin().db.collection('campaigns').doc(campaignId(id)),requestHash=digest(JSON.stringify(command));
-  return admin().db.runTransaction(async tx=>{
+  const start=performance.now();let readMs=0,simulationMs=0,attempts=0;
+  const response=await admin().db.runTransaction(async tx=>{
+    attempts++;let mark=performance.now();
     const doc=await tx.get(ref);
+    readMs+=performance.now()-mark;
     if(!doc.exists)throw new ApiError(404,'Campaign not found.');
     const c=doc.data() as CampaignRecord;
     requireOwner(c,uid);
     if(c.lastRequestId===requestId) {
       if(c.lastRequestHash!==requestHash)throw new ApiError(409,'A request ID cannot be reused for another command.');
-      return {revision:c.revision,alreadyApplied:true};
+      const first=c.lastRequestFirstPage??c.historyPages;
+      mark=performance.now();
+      const pages=await tx.get(ref.collection('history').where('seq','>=',first).where('seq','<',c.historyPages).orderBy('seq'));
+      readMs+=performance.now()-mark;
+      return {...viewOf(id,c,pages.docs.flatMap(p=>JSON.parse(p.data().json)),first,c.historyPages),alreadyApplied:true,actions:0};
     }
+    mark=performance.now();
     const result=applyCommand(c,uid,revision,command,rng);
     const pages=historyPages(result.events,c.historyPages);
-    const update={state:snapshot(result.state),revision:c.revision+1,eventCount:c.eventCount+result.events.length,historyPages:c.historyPages+pages.length,updatedAt:new Date().toISOString(),lastRequestId:requestId,lastRequestHash:requestHash};
+    const update={state:snapshot(result.state),revision:c.revision+1,eventCount:c.eventCount+result.events.length,historyPages:c.historyPages+pages.length,updatedAt:new Date().toISOString(),lastRequestId:requestId,lastRequestHash:requestHash,lastRequestFirstPage:c.historyPages};
+    simulationMs+=performance.now()-mark;
     tx.update(ref,update);
     for(const page of pages)tx.create(ref.collection('history').doc(pageId(page.seq)),page);
-    return {revision:update.revision,alreadyApplied:false};
+    return {...viewOf(id,{...c,...update},result.events,c.historyPages,update.historyPages),alreadyApplied:false,actions:result.actions,...(result.frames?{frames:result.frames}:{})};
   });
+  return {...response,timings:{transactionMs:performance.now()-start,readMs,simulationMs,attempts}};
 }
 export async function deleteCampaign(id:string,uid:string,revision:number) {
   const db=admin().db,ref=db.collection('campaigns').doc(campaignId(id));

@@ -105,3 +105,55 @@ test('long campaigns page complete event history without placing it in the board
  while(page.hasMore){page=await publicCampaign(id,{after:page.nextPage});all.push(...page.state.events);}
  assert.equal(all.length,latest.eventCount);assert.deepEqual(all.map(e=>e.id),Array.from({length:latest.eventCount},(_,i)=>i+1));
 });
+
+async function npcFixture(id){
+ const s=createGame(pool,'za',()=>.5,id);s.order=s.players.map(p=>p.id);s.turnIndex=1;
+ for(const c of s.countries)c.soldiers=2; // deterministic peaceful turns; no dice needed
+ const {persistNew}=require('../../.cloud-test-build/src/server/campaigns.js');
+ await admin().db.runTransaction(async tx=>{persistNew(tx,id,owner,s,'cloud');});
+ return publicCampaign(id);
+}
+test('batch reply contains committed board and full new history; retries and simultaneous moves never duplicate it',async()=>{
+ const initial=await npcFixture('batch-concurrent-test');
+ const command={type:'npc-batch'};
+ const results=await Promise.allSettled(['batch-a','batch-b'].map(requestId=>moveCampaign(initial.id,owner,0,command,requestId)));
+ assert.equal(results.filter(r=>r.status==='fulfilled').length,1);
+ assert.equal(results.find(r=>r.status==='rejected').reason.status,409);
+ const reply=results.find(r=>r.status==='fulfilled').value;
+ assert.equal(reply.actions,9);assert.equal(reply.revision,1);assert.equal(reply.firstPage,initial.nextPage);
+ assert.equal(reply.frames.length,reply.actions);
+ const {replayStates}=require('../../.cloud-test-build/src/cloud/replay.js');
+ const playback=[...replayStates(initial.state,reply.state.events,reply.frames)];
+ assert.equal(reply.state.order[reply.state.turnIndex],'human');
+ const resumed=await publicCampaign(initial.id);
+ assert.deepEqual(playback.at(-1),resumed.state);
+ assert.deepEqual(reply.state.countries,resumed.state.countries);
+ assert.deepEqual([...initial.state.events,...reply.state.events],resumed.state.events);
+ assert.equal(reply.eventCount,resumed.eventCount);
+ assert.ok(reply.timings.transactionMs>=reply.timings.simulationMs);assert.ok(reply.timings.attempts>=1);
+ const winner=results[0].status==='fulfilled'?'batch-a':'batch-b';
+ const retry=await moveCampaign(initial.id,owner,0,command,winner);
+ assert.equal(retry.alreadyApplied,true);assert.deepEqual(retry.state,reply.state);
+ assert.equal((await publicCampaign(initial.id)).eventCount,reply.eventCount);
+ await assert.rejects(()=>moveCampaign(initial.id,other,1,command,'intruder'),e=>e.status===403);
+});
+test('simultaneous identical batch requests are idempotent and commit only one revision',async()=>{
+ const initial=await npcFixture('batch-same-request');
+ const replies=await Promise.all([1,2].map(()=>moveCampaign(initial.id,owner,0,{type:'npc-batch'},'same-batch-request')));
+ assert.equal(replies.filter(x=>x.alreadyApplied).length,1);
+ assert.equal(replies[0].revision,1);assert.deepEqual(replies[0].state,replies[1].state);
+});
+test('batch reduces nine NPC transactions to one with the same saved result',async t=>{
+ const single=await npcFixture('batch-benchmark-single'),batch=await npcFixture('batch-benchmark-multi');
+ let v=single,requests=0;const start=performance.now();
+ while(v.state.order[v.state.turnIndex]!=='human'){
+  v=await moveCampaign(single.id,owner,v.revision,{type:'npc-step'},`step-${requests++}`);
+ }
+ const singleMs=performance.now()-start,batchStart=performance.now();
+ const result=await moveCampaign(batch.id,owner,0,{type:'npc-batch'},'benchmark-batch');
+ const batchMs=performance.now()-batchStart;
+ assert.equal(requests,9);assert.equal(result.actions,requests);assert.equal(v.revision,9);assert.equal(result.revision,1);
+ const singleSaved=await publicCampaign(single.id),batchSaved=await publicCampaign(batch.id);
+ assert.deepEqual({...singleSaved.state,id:'same'}, {...batchSaved.state,id:'same'});
+ t.diagnostic(`Local emulator: ${requests} single transactions ${singleMs.toFixed(1)} ms; one batch ${batchMs.toFixed(1)} ms; batch Firestore transaction ${result.timings.transactionMs.toFixed(1)} ms. This is not a production latency benchmark.`);
+});

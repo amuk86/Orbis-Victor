@@ -112,11 +112,39 @@ descending (collection scope). Wait until it is enabled, then refresh campaigns.
 Publishing the checked-in index configuration still requires explicit approval;
 no index or rules are automatically published by the application.
 
-Cloud moves wait for a server transaction and confirmation before allowing the
-next command. Each transaction saves the current board and only its new history
-pages; it does not rewrite or reload the complete past history. NPC steps also
-make these requests. Cloud mode therefore adds network latency to the original
-animation delay; fast-forward shortens that delay but still confirms every move.
+Cloud moves wait for a server transaction before allowing the next command.
+The command response now includes the confirmed board and new events, so the owner
+usually needs no follow-up state fetch. Listener updates for the same revision are
+ignored; other-tab revisions or missing history pages still trigger a bounded
+catch-up read. Older responses cannot roll back a newer board or skip a history gap.
+
+Normal mode still runs one NPC action per request with the existing animations.
+Fast-forward sends `npc-batch`: at most 64 actions using the existing strategy and
+server dice, stopping earlier at a human turn, game end, or response-size budget. One transaction checks
+ownership/version, saves the final board, and appends all new events to history
+pages. One revision represents one committed command/batch, not one individual
+NPC action. Tied battles can reach the limit and resume in another batch. Turning
+fast-forward off takes effect after the current bounded request. Spectators see
+the committed final board and can read every event in the batch. The owner replays
+every confirmed action at 170 ms per action using compact server-generated board
+changes, including dice and dispatches. The menu, hidden tab, and defeat prompt
+pause playback. Controls stay locked until playback finishes. These presentation
+frames are returned with the save response and are not additional database writes.
+Refreshing during playback resumes from the already-saved board; it does not
+replay or submit those moves again.
+
+The latest move's **Connection timing** disclosure reports browser request time,
+server processing, Auth verification, transaction time, simulation time, actions,
+and transaction attempts. The response also supplies `Server-Timing` for browser
+DevTools. Transaction time includes reads, retries/backoff and commit; it is not
+pure database network time. Read time is available in the response JSON. Browser
+request time includes token acquisition, transport and response parsing; subtracting
+server time is only an approximate overhead estimate. No credentials or tokens
+are included. Compare warmed requests using `npm run build` / `npm start` before
+judging production speed; development route compilation adds overhead. Emulator
+benchmarks compare nine single-action transactions with one equivalent batch and
+are not measurements of live Firebase/Vercel latency. No production moves are
+created by the test suite.
 
 ## Vercel configuration (manual; no deployment performed)
 
@@ -221,8 +249,8 @@ index reads and usage: use the [current Firestore billing documentation](https:/
 | Operation | Typical billed work |
 | --- | --- |
 | Create campaign | 1 transaction lookup + board/history writes |
-| Successful move | 1 campaign transaction read + 1 board write + usually 1 new history-page write |
-| Owner move confirmation | root read + new history-page reads; usually one page |
+| Successful command/batch | 1 campaign transaction read + 1 board write + new bounded history-page writes |
+| Owner move confirmation | board and new events in the same HTTP response; no extra API state read in the usual case; the board listener still reads the changed revision |
 | Active viewer | initial board listener read, then one board read per changed revision, plus incremental history reads and API root reads |
 | Open campaign | root read + latest up to 20 history pages; board listener also reads the root |
 | Older history | root read + up to 20 earlier pages per request |
@@ -231,9 +259,11 @@ index reads and usage: use the [current Firestore billing documentation](https:/
 | Legacy import | manifest/chunk reads/writes, transaction reads, history writes, and staging deletes; proportional to size |
 
 Transactions can retry; reconnects/listeners and even empty queries can incur reads.
-All spectators multiply read and network costs. Fast-forward does **not** reduce
-moves/writes; it increases their rate. No full-history read is needed for an ordinary
-move. No unbounded global platform scan or automatic cloud analytics is added.
+All spectators multiply read and network costs. Fast-forward batches reduce board
+writes and transaction reads per NPC action, and pack new events into fewer history
+pages. Every event is still retained. Idempotent retries read the last command's
+history pages to return the same confirmed result. No full-history read is needed
+for an ordinary move. No unbounded global platform scan or automatic cloud analytics is added.
 Local analytics is preserved and labelled local. Configure budgets/alerts and
 appropriate Vercel rate limiting before inviting a large public audience. No rate
 limit or App Check enforcement is claimed by this code.
@@ -247,12 +277,21 @@ npm run test:emulators     # starts real Auth/Firestore emulators, loads test ru
 npm run build
 # With both emulators AND the app configured/running on port 3103:
 npm run test:cloud:http
+# Optional actual browser check (Node 24 and Google Chrome required):
+FIREBASE_AUTH_EMULATOR_HOST=127.0.0.1:9099 FIRESTORE_EMULATOR_HOST=127.0.0.1:8080 npm run test:cloud:browser
 ```
 
 Emulator tests cover verified/forged tokens; password signup/signin/signout/reset;
 mock Google credentials; anonymous public viewing; denied direct writes;
 owner-only commands/list/delete; real simultaneous transactions; saving/resuming;
 private staged imports; duplicate imports; malformed imports; complete paginated history; and delete cleanup.
+Batch tests cover seeded equivalence to individual actions, tied battles reaching
+the cap, victory/human-turn stops, complete saved event sequences, concurrent
+batches and idempotent retries. The browser test checks actual normal/fast-forward
+requests, every visible NPC turn during fast-forward, menu pause/resume, lack of
+follow-up owner state fetches, and refresh/resume. It uses a
+temporary Chrome profile and isolated demo campaigns. Set `CHROME_BIN` if Chrome
+is installed elsewhere; `ORBIS_TEST_URL` defaults to `http://localhost:3103`.
 They deliberately fail rather than skip when emulator hosts are missing.
 
 Emulators do not verify production IAM, actual Google OAuth/domain setup, real

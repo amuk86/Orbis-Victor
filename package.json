@@ -13,7 +13,8 @@
     "test:cloud:integration": "npm run test:cloud:compile && node --conditions=react-server --test --test-isolation=none tests/cloud/emulator.test.cjs",
     "test:emulators": "node scripts/emulators.cjs test",
     "emulators": "node scripts/emulators.cjs start",
-    "test:cloud:http": "node --test --test-isolation=none tests/cloud/http-smoke.cjs"
+    "test:cloud:http": "node --test --test-isolation=none tests/cloud/http-smoke.cjs",
+    "test:cloud:browser": "npm run test:cloud:compile && node --conditions=react-server --test --test-isolation=none tests/cloud/browser-batch.cjs"
   },
   "dependencies": {
     "firebase": "^13.2.0",
