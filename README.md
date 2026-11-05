@@ -2,14 +2,15 @@
 
 Conquer the world. The die is cast.
 
+**Version 1 is live — [Play Orbis Victor](https://orbis-victor.vercel.app/).**
+
 A single-player conquest game with separate local-demo and Firebase cloud modes, built with Next.js App Router, TypeScript,
 Tailwind CSS v4, Cinzel, and React Bits CRTWarp / DecryptedText. The finished
 landing page is preserved; Press Play opens `/play`. The independent local game remains at `/game/demo`.
 
 **Firebase Authentication, Firestore, emulators and Vercel setup:**
 [Read the migration guide](docs/FIREBASE.md). Copy `.env.example` to ignored
-`.env.local` to configure cloud services. No production deployment or rules
-publication has been performed.
+`.env.local` to configure cloud services for local development.
 
 ## Run locally
 
@@ -21,7 +22,7 @@ npm run dev
 ```
 
 For the credential-free local demo, open http://localhost:3000/game/demo.
-For configured cloud play, open http://localhost:3000/play or press **Play**.
+For configured cloud play, open https://orbis-victor.vercel.app/ or press **Play**.
 Keep the terminal open; `Ctrl+C` stops the app.
 
 ```sh
