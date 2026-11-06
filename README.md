@@ -22,7 +22,7 @@ npm run dev
 ```
 
 For the credential-free local demo, open http://localhost:3000/game/demo.
-For configured cloud play locally, open http://localhost:3000/play or press **Play**.
+For configured cloud play locally, open https://orbis-victor.vercel.app/ or press **Play**.
 Keep the terminal open; `Ctrl+C` stops the app.
 
 ```sh
@@ -34,7 +34,7 @@ npm start       # serve the production build locally
 The initial installation/build needs internet access for packages and the existing
 Google Fonts configuration. Cinzel is then served locally by Next.js. In local-demo play,
 only optional flag images use the network; a three-stripe flag appears offline.
-Population data for all 195 countries is bundled; see [data/README.md](data/README.md).
+Population data for all 195 countries is bundled; see [data/README.md](https://github.com/amuk86/Orbis-Victor/blob/main/data/README.md).
 
 ## Vercel setup
 
@@ -77,7 +77,7 @@ deployment or update the existing Vercel project:
    `orbis-victor.vercel.app`, and any custom hostname, without `https://` or paths.
    Ensure the default Firestore database, server identity permissions, reviewed
    security rules and required campaign index are configured as described in the
-   [Firebase console guide](docs/FIREBASE.md#firebase-console-configuration-manual).
+   [Firebase console guide](https://github.com/amuk86/Orbis-Victor/blob/main/docs/FIREBASE.md#firebase-console-configuration-manual).
    Deploying to Vercel does not publish Firestore rules or indexes.
 4. Choose a Vercel function region close to your Firestore database to reduce
    save latency. Use the Node.js runtime already configured by the API routes.
@@ -95,7 +95,7 @@ permissions. If saves work but the campaign list fails, check that the campaign
 composite index is enabled in Firestore. Never paste private keys or tokens into
 logs, issues or chat.
 
-See the [detailed Vercel guide](docs/FIREBASE.md#vercel-configuration-manual-no-deployment-performed)
+See the [detailed Vercel guide](https://github.com/amuk86/Orbis-Victor/blob/main/docs/FIREBASE.md#vercel-configuration-manual-no-deployment-performed)
 and the official [Next.js on Vercel](https://vercel.com/docs/frameworks/full-stack/nextjs),
 [Node.js versions](https://vercel.com/docs/functions/runtimes/node-js/node-js-versions)
 and [environment-variable documentation](https://vercel.com/docs/environment-variables).
