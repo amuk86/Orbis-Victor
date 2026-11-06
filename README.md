@@ -22,7 +22,7 @@ npm run dev
 ```
 
 For the credential-free local demo, open http://localhost:3000/game/demo.
-For configured cloud play, open https://orbis-victor.vercel.app/ or press **Play**.
+For configured cloud play locally, open http://localhost:3000/play or press **Play**.
 Keep the terminal open; `Ctrl+C` stops the app.
 
 ```sh
@@ -35,6 +35,70 @@ The initial installation/build needs internet access for packages and the existi
 Google Fonts configuration. Cinzel is then served locally by Next.js. In local-demo play,
 only optional flag images use the network; a three-stripe flag appears offline.
 Population data for all 195 countries is bundled; see [data/README.md](data/README.md).
+
+## Vercel setup
+
+The hosted game is at https://orbis-victor.vercel.app/. To configure your own
+deployment or update the existing Vercel project:
+
+1. Import this Git repository into Vercel, or open its existing project. Use the
+   repository root, the **Next.js** framework preset and **Node.js 24.x**. Set the
+   install command to `npm ci` and the build command to `npm run build`. Keep the
+   default output directory; this app requires server functions, so do not use a
+   static export. Commit `package-lock.json` to preserve the Firebase Admin
+   compatibility overrides.
+2. In the Vercel project's **Settings → Environment Variables**, add the following
+   for **Production**. Use values from the same Firebase project on both sides.
+   Local `.env.local` values are not automatically available on Vercel.
+
+   | Variable | Value |
+   | --- | --- |
+   | `NEXT_PUBLIC_FIREBASE_API_KEY` | Firebase Web app API key |
+   | `NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN` | Firebase Web app auth domain |
+   | `NEXT_PUBLIC_FIREBASE_PROJECT_ID` | Firebase project ID |
+   | `NEXT_PUBLIC_FIREBASE_APP_ID` | Firebase Web app ID |
+   | `NEXT_PUBLIC_FIREBASE_USE_EMULATORS` | `false` |
+   | `FIREBASE_PROJECT_ID` | Same Firebase project ID |
+   | `FIREBASE_CLIENT_EMAIL` | Server service-account email |
+   | `FIREBASE_PRIVATE_KEY` | Server service-account PEM private key |
+   | `FIREBASE_USE_EMULATORS` | `false` |
+
+   Enter values directly in Vercel without surrounding dotenv quotes. For the
+   private key, preserve actual PEM line breaks or use literal `\n` sequences;
+   the server supports both. Keep the email and key server-only, with no
+   `NEXT_PUBLIC_` prefix, and never commit them. Remove all four
+   `*_AUTH_EMULATOR_HOST` / `*_FIRESTORE_EMULATOR_HOST` variables, including their
+   `NEXT_PUBLIC_` variants. Do not set a local `GOOGLE_APPLICATION_CREDENTIALS`
+   file path on Vercel. Configure Preview separately with a development Firebase
+   project if you need preview cloud play.
+3. In Firebase Console, enable **Google** and **Email/Password** under
+   **Authentication → Sign-in method**. Under **Authentication → Settings →
+   Authorized domains**, add your production hostname, such as
+   `orbis-victor.vercel.app`, and any custom hostname, without `https://` or paths.
+   Ensure the default Firestore database, server identity permissions, reviewed
+   security rules and required campaign index are configured as described in the
+   [Firebase console guide](docs/FIREBASE.md#firebase-console-configuration-manual).
+   Deploying to Vercel does not publish Firestore rules or indexes.
+4. Choose a Vercel function region close to your Firestore database to reduce
+   save latency. Use the Node.js runtime already configured by the API routes.
+   Confirm your Vercel plan supports the import route's requested 60-second
+   duration.
+5. Deploy when ready, or redeploy the existing project after changing variables.
+   Public `NEXT_PUBLIC_*` values are embedded at build time, so changing settings
+   alone does not update an existing deployment. Verify Google/password sign-in,
+   password reset, campaign creation, refresh/cross-device resume, and a shared
+   campaign viewed while signed out. Only its signed-in owner should control it.
+
+If sign-in reports an unauthorized domain, check Firebase's authorized hostnames.
+If saves fail, inspect Vercel function logs for missing server configuration or
+permissions. If saves work but the campaign list fails, check that the campaign
+composite index is enabled in Firestore. Never paste private keys or tokens into
+logs, issues or chat.
+
+See the [detailed Vercel guide](docs/FIREBASE.md#vercel-configuration-manual-no-deployment-performed)
+and the official [Next.js on Vercel](https://vercel.com/docs/frameworks/full-stack/nextjs),
+[Node.js versions](https://vercel.com/docs/functions/runtimes/node-js/node-js-versions)
+and [environment-variable documentation](https://vercel.com/docs/environment-variables).
 
 ## Playing
 
