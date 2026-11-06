@@ -9,7 +9,7 @@ Tailwind CSS v4, Cinzel, and React Bits CRTWarp / DecryptedText. The finished
 landing page is preserved; Press Play opens `/play`. The independent local game remains at `/game/demo`.
 
 **Firebase Authentication, Firestore, emulators and Vercel setup:**
-[Read the migration guide](docs/FIREBASE.md). Copy `.env.example` to ignored
+[Read the migration guide](https://github.com/amuk86/Orbis-Victor/blob/main/docs/FIREBASE.md). Copy `.env.example` to ignored
 `.env.local` to configure cloud services for local development.
 
 ## Run locally
